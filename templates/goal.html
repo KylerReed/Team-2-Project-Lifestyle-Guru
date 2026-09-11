@@ -1,0 +1,86 @@
+<!-- templates/goal.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Goal - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen login-bg">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Back Arrow -->
+        <a href="{{ url_for('activity') }}" class="back-arrow">←</a>
+
+        <!-- Logo -->
+        <div class="logo-container" style="width: 110px; height: 110px; margin-top: 25px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- Heading -->
+        <h1 class="main-title" style="font-size: 24px; margin-bottom: 25px; color: #000000; text-align: center;">What goal do you have in mind?</h1>
+
+        <!-- Form with Goal Selection Cards -->
+        <form action="#" method="POST" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            
+            <div class="gender-options-container" style="width: 100%; max-width: 310px; display: flex; flex-direction: column; gap: 15px;">
+                
+                <!-- Lose Weight -->
+                <label class="gender-card" onclick="selectGoal(this, 'Lose weight')">
+                    <span>Lose weight</span>
+                    <input type="radio" name="goal" value="Lose weight" style="display: none;">
+                    <div class="radio-circle"></div>
+                </label>
+
+                <!-- Maintain Weight -->
+                <label class="gender-card" onclick="selectGoal(this, 'Maintain weight')">
+                    <span>Maintain weight</span>
+                    <input type="radio" name="goal" value="Maintain weight" style="display: none;">
+                    <div class="radio-circle"></div>
+                </label>
+
+                <!-- Gain Weight -->
+                <label class="gender-card active" onclick="selectGoal(this, 'Gain weight')">
+                    <span>Gain weight</span>
+                    <input type="radio" name="goal" value="Gain weight" checked style="display: none;">
+                    <div class="radio-circle"></div>
+                </label>
+
+            </div>
+
+            <!-- Continue Button -->
+            <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px; margin-top: 25px; border: none; cursor: pointer;">Continue</button>
+        </form>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="#"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="#"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="#"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+    </div>
+
+    <!-- JavaScript to handle card active state switching -->
+    <script>
+        function selectGoal(selectedCard, value) {
+            document.querySelectorAll('.gender-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            selectedCard.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>

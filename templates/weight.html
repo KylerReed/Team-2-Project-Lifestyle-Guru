@@ -1,0 +1,172 @@
+<!-- templates/weight.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Weight - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen login-bg">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Back Arrow -->
+        <a href="{{ url_for('age') }}" class="back-arrow">←</a>
+
+        <!-- Logo Shifted Down Further -->
+        <div class="logo-container" style="width: 110px; height: 110px; margin-top: 55px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- Heading -->
+        <h1 class="main-title" style="font-size: 22px; height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; color: #000000; text-align: center;">What’s your current weight ?</h1>
+
+        <!-- Unit Toggles (Kg / Lbs) -->
+        <div class="unit-toggle-container">
+            <button type="button" class="unit-btn active" id="kgBtn" onclick="setUnit('Kg')">Kg</button>
+            <button type="button" class="unit-btn" id="lbsBtn" onclick="setUnit('Lbs')">Lbs</button>
+        </div>
+
+        <!-- Weight Output Display -->
+        <div class="weight-output" id="weightOutput">62 Kg</div>
+
+        <!-- Horizontal Ruler Scroll Container -->
+        <div class="ruler-wrapper">
+            <div class="ruler-indicator-line"></div>
+            <div class="ruler-container" id="rulerContainer">
+                <div class="ruler-track" id="rulerTrack">
+                    <!-- Ticks generated via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Form / Continue Button -->
+        <form action="{{ url_for('gender') }}" method="POST" style="width: 100%; display: flex; justify-content: center; z-index: 10;">
+            <input type="hidden" name="selected_weight" id="selectedWeightInput" value="62">
+            <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px;">Continue</button>
+        </form>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="#"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="#"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="#"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Crown" class="nav-icon"></a>
+        </div>
+
+    </div>
+
+    <!-- JavaScript for Scrollable Ruler and Unit Switching -->
+    <script>
+        const rulerTrack = document.getElementById('rulerTrack');
+        const rulerContainer = document.getElementById('rulerContainer');
+        const weightOutput = document.getElementById('weightOutput');
+        const selectedWeightInput = document.getElementById('selectedWeightInput');
+        
+        let currentUnit = 'Kg';
+        let currentVal = 62;
+
+        const ranges = {
+            'Kg': { min: 30, max: 150, defaultVal: 62 },
+            'Lbs': { min: 66, max: 330, defaultVal: 137 }
+        };
+
+        function buildRuler() {
+            rulerTrack.innerHTML = '';
+            const range = ranges[currentUnit];
+
+            for (let i = range.min; i <= range.max; i++) {
+                const group = document.createElement('div');
+                group.className = 'ruler-tick-group';
+                group.setAttribute('data-value', i);
+
+                const isMajor = (i % 5 === 0);
+                
+                group.innerHTML = `
+                    <div class="tick ${isMajor ? 'large' : 'small'}"></div>
+                    ${isMajor ? `<div class="ruler-number">${i}</div>` : `<div style="height:21px;"></div>`}
+                `;
+                rulerTrack.appendChild(group);
+
+                if (i < range.max) {
+                    for (let j = 1; j < 5; j++) {
+                        const subGroup = document.createElement('div');
+                        subGroup.className = 'ruler-tick-group';
+                        subGroup.innerHTML = `<div class="tick small" style="opacity: 0.4;"></div><div style="height:21px;"></div>`;
+                        rulerTrack.appendChild(subGroup);
+                    }
+                }
+            }
+        }
+
+        function scrollToValue(val) {
+            setTimeout(() => {
+                const targetGroup = rulerTrack.querySelector(`[data-value="${val}"]`);
+                if (targetGroup) {
+                    rulerContainer.scrollLeft = targetGroup.offsetLeft - rulerContainer.clientWidth / 2 + targetGroup.clientWidth / 2;
+                }
+            }, 50);
+        }
+
+        buildRuler();
+        scrollToValue(ranges['Kg'].defaultVal);
+
+        rulerContainer.addEventListener('scroll', () => {
+            const containerCenter = rulerContainer.clientWidth / 2;
+            const groups = rulerTrack.querySelectorAll('.ruler-tick-group[data-value]');
+            
+            let closestVal = ranges[currentUnit].defaultVal;
+            let minDistance = Infinity;
+
+            groups.forEach(group => {
+                const rect = group.getBoundingClientRect();
+                const containerRect = rulerContainer.getBoundingClientRect();
+                const groupCenter = (rect.left + rect.right) / 2 - containerRect.left;
+                const distance = Math.abs(containerCenter - groupCenter);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestVal = group.getAttribute('data-value');
+                }
+            });
+
+            currentVal = closestVal;
+            weightOutput.innerText = `${currentVal} ${currentUnit}`;
+            selectedWeightInput.value = currentVal;
+        });
+
+        function setUnit(unit) {
+            if (currentUnit === unit) return;
+
+            if (unit === 'Lbs') {
+                currentVal = Math.round(currentVal * 2.20462);
+                if (currentVal > 330) currentVal = 330;
+                if (currentVal < 66) currentVal = 66;
+            } else {
+                currentVal = Math.round(currentVal / 2.20462);
+                if (currentVal > 150) currentVal = 150;
+                if (currentVal < 30) currentVal = 30;
+            }
+
+            currentUnit = unit;
+            document.getElementById('kgBtn').classList.toggle('active', unit === 'Kg');
+            document.getElementById('lbsBtn').classList.toggle('active', unit === 'Lbs');
+
+            buildRuler();
+            scrollToValue(currentVal);
+            weightOutput.innerText = `${currentVal} ${currentUnit}`;
+            selectedWeightInput.value = currentVal;
+        }
+    </script>
+
+</body>
+</html>

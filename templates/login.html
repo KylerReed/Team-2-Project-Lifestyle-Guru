@@ -1,0 +1,66 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen login-bg">
+
+        <!-- Status Bar -->
+         <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Larger Logo -->
+        <div class="small-logo" style="width: 110px; height: 110px; margin-top: 20px; margin-bottom: 5px; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- Headings -->
+        <h2 class="login-title">Create an account or Log in</h2>
+        <p class="login-subtitle">Enter your email to sign up or log in for this app</p>
+
+        <!-- Form -->
+        <form class="auth-form" action="{{ url_for('age') }}" method="POST">
+            <input type="email" name="email" class="auth-input" placeholder="email@domain.com" required>
+            <input type="password" name="password" class="auth-input" placeholder="password" required>
+
+            <div class="button-row">
+                <button type="submit" name="action" value="signup" class="auth-btn">Sign up</button>
+                <button type="submit" name="action" value="login" class="auth-btn">Log in</button>
+            </div>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider-container">
+            <div class="divider-line"></div>
+            <span class="divider-text">or</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Social Buttons -->
+        <a href="#" class="social-btn">
+            <img src="{{ url_for('static', filename='Google-Logo.png') }}" alt="Google" class="social-icon"> Continue with Google
+        </a>
+        <a href="#" class="social-btn">
+            <img src="{{ url_for('static', filename='apple-logo.png') }}" alt="Apple" class="social-icon"> Continue with Apple
+        </a>
+
+        <!-- Terms Footer -->
+        <p class="terms-text">
+            By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </p>
+
+    </div>
+
+</body>
+</html>
