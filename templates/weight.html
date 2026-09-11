@@ -1,12 +1,14 @@
 <!-- templates/weight.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Weight - Lifestyle Guru</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
     <div class="phone-screen login-bg">
@@ -24,12 +26,16 @@
         <a href="{{ url_for('age') }}" class="back-arrow">←</a>
 
         <!-- Logo Shifted Down Further -->
-        <div class="logo-container" style="width: 110px; height: 110px; margin-top: 55px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        <div class="logo-container"
+            style="width: 110px; height: 110px; margin-top: 55px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"
+                style="width: 100%; height: 100%; object-fit: contain;">
         </div>
 
         <!-- Heading -->
-        <h1 class="main-title" style="font-size: 22px; height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; color: #000000; text-align: center;">What’s your current weight ?</h1>
+        <h1 class="main-title"
+            style="font-size: 22px; height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; color: #000000; text-align: center;">
+            What’s your current weight ?</h1>
 
         <!-- Unit Toggles (Kg / Lbs) -->
         <div class="unit-toggle-container">
@@ -51,9 +57,11 @@
         </div>
 
         <!-- Form / Continue Button -->
-        <form action="{{ url_for('gender') }}" method="POST" style="width: 100%; display: flex; justify-content: center; z-index: 10;">
+        <form action="{{ url_for('weight') }}" method="POST"
+            style="width: 100%; display: flex; justify-content: center; z-index: 10;">
             <input type="hidden" name="selected_weight" id="selectedWeightInput" value="62">
-            <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px;">Continue</button>
+            <button type="submit" class="continue-btn"
+                style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px;">Continue</button>
         </form>
 
         <!-- Bottom Navigation Bar -->
@@ -71,7 +79,7 @@
         const rulerContainer = document.getElementById('rulerContainer');
         const weightOutput = document.getElementById('weightOutput');
         const selectedWeightInput = document.getElementById('selectedWeightInput');
-        
+
         let currentUnit = 'Kg';
         let currentVal = 62;
 
@@ -90,7 +98,7 @@
                 group.setAttribute('data-value', i);
 
                 const isMajor = (i % 5 === 0);
-                
+
                 group.innerHTML = `
                     <div class="tick ${isMajor ? 'large' : 'small'}"></div>
                     ${isMajor ? `<div class="ruler-number">${i}</div>` : `<div style="height:21px;"></div>`}
@@ -123,7 +131,7 @@
         rulerContainer.addEventListener('scroll', () => {
             const containerCenter = rulerContainer.clientWidth / 2;
             const groups = rulerTrack.querySelectorAll('.ruler-tick-group[data-value]');
-            
+
             let closestVal = ranges[currentUnit].defaultVal;
             let minDistance = Infinity;
 
@@ -169,4 +177,5 @@
     </script>
 
 </body>
+
 </html>
