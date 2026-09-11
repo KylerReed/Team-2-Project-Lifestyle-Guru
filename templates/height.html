@@ -1,0 +1,85 @@
+<!-- templates/height.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Height - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen login-bg">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Back Arrow -->
+        <a href="{{ url_for('gender') }}" class="back-arrow">←</a>
+
+        <!-- Logo Shifted Down Further -->
+        <div class="logo-container" style="width: 110px; height: 110px; margin-top: 80px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- Heading -->
+        <h1 class="main-title" style="font-size: 22px; height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: #000000; text-align: center;">What’s your current height?</h1>
+
+        <!-- Unit Toggles (Cm / Inch) -->
+        <div class="unit-toggle-container" style="margin-bottom: 25px;">
+            <button type="button" class="unit-btn active" id="cmBtn" onclick="setUnit('Cm')">Cm</button>
+            <button type="button" class="unit-btn" id="inchBtn" onclick="setUnit('Inch')">Inch</button>
+        </div>
+
+        <!-- Form with Type-in Input Field -->
+        <form action="{{ url_for('activity') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            
+            <div class="height-output-card" style="background: #ffffff; width: 100%; max-width: 310px; padding: 20px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;">
+                <input type="number" name="height_value" id="heightInput" value="168" min="50" max="300" style="font-size: 36px; font-weight: bold; color: #9ACd32; border: none; outline: none; background: transparent; text-align: center; width: 120px;">
+                <span id="unitLabel" style="font-size: 36px; font-weight: bold; color: #9ACd32; margin-left: 5px;">cm</span>
+            </div>
+
+            <!-- Continue Button -->
+            <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px; border: none; cursor: pointer; margin-top: 15px;">Continue</button>
+        </form>
+        
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="#"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="#"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="#"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+    </div>
+
+    <!-- JavaScript to handle unit switching label updates -->
+    <script>
+        const unitLabel = document.getElementById('unitLabel');
+        const heightInput = document.getElementById('heightInput');
+        
+        function setUnit(unit) {
+            document.getElementById('cmBtn').classList.toggle('active', unit === 'Cm');
+            document.getElementById('inchBtn').classList.toggle('active', unit === 'Inch');
+
+            if (unit === 'Inch') {
+                unitLabel.innerText = 'in';
+                heightInput.value = Math.round(heightInput.value / 2.54);
+                heightInput.min = 20;
+                heightInput.max = 120;
+            } else {
+                unitLabel.innerText = 'cm';
+                heightInput.value = Math.round(heightInput.value * 2.54);
+                heightInput.min = 50;
+                heightInput.max = 300;
+            }
+        }
+    </script>
+
+</body>
+</html>

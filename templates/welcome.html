@@ -1,0 +1,40 @@
+<!-- templates/welcome.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Lifestyle Guru</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    
+    <div class="phone-screen">
+
+        
+         <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Logo Icon -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Lifestyle Guru Logo - Fork, Knife, Flame, and Leaves">
+        </div>
+
+        
+        <h1 class="main-title">Welcome to<br>Lifestyle Guru!</h1>
+        <p class="subtitle">Health is wealth!</p>
+
+        
+        <a href="{{ url_for('login') }}" class="continue-btn">Continue</a>
+
+    </div>
+
+</body>
+</html>
