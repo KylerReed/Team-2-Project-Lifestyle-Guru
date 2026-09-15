@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Nutrition - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative;">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Header: Back Arrow, Title, Notification Bell -->
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            <a href="{{ url_for('dashboard') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Daily Nutrition</h2>
+            <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
+                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- Scrollable Content Container -->
+        <div style="width: 100%; flex: 1; overflow-y: auto; padding-bottom: 100px; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box;">
+            
+            <!-- Date Selector Row -->
+            <div style="display: flex; justify-content: space-between; width: 100%; gap: 8px;">
+                {% set dates = [('10', 'Sept'), ('11', 'Sept'), ('12', 'Sept'), ('13', 'Sept')] %}
+                {% for day, month in dates %}
+                    <a href="{{ url_for('daily_menu', date=day, meal=selected_meal) }}" style="text-decoration: none; flex: 1; background: {% if selected_date == day %}#CDE26D{% else %}#F5F5F5{% endif %}; border-radius: 16px; padding: 10px 0; text-align: center; border: {% if selected_date == day %}none{% else %}1px solid #E0E0E0{% endif %}; box-shadow: {% if selected_date == day %}0 2px 8px rgba(0,0,0,0.05){% else %}none{% endif %};">
+                        <div style="font-size: 11px; color: {% if selected_date == day %}#000{% else %}#666{% endif %}; font-weight: 600;">{{ month }}</div>
+                        <div style="font-size: 16px; color: {% if selected_date == day %}#000{% else %}#666{% endif %}; font-weight: 700;">{{ day }}</div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- Meal Type Selector Tabs -->
+            <div style="display: flex; background: #F0F0F0; border-radius: 24px; padding: 4px; gap: 4px; width: 100%; box-sizing: border-box;">
+                {% for m in ['Breakfast', 'Lunch', 'Dinner', 'Snacks'] %}
+                    <a href="{{ url_for('daily_menu', date=selected_date, meal=m) }}" style="flex: 1; text-align: center; padding: 10px 0; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 20px; background: {% if selected_meal == m %}#ffffff{% else %}transparent{% endif %}; color: {% if selected_meal == m %}#000{% else %}#8F8E8E{% endif %}; box-shadow: {% if selected_meal == m %}0 2px 6px rgba(0,0,0,0.06){% else %}none{% endif %};">
+                        {{ m }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- Food Item Cards Container -->
+            <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                
+                <!-- Food Card 1 -->
+                <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="font-size: 16px; font-weight: 700; color: #000;">Salad with eggs</div>
+                            <div style="font-size: 12px; color: #8F8E8E; margin-top: 2px;">🔥 294 kcal - 100g</div>
+                        </div>
+                        <div style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #E0E0E0; display: flex; justify-content: center; align-items: center; color: #8F8E8E; font-size: 12px; cursor: pointer; background: #FAFAFA;">•••</div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 13px;">
+                        <div><strong style="color: #000;">12g</strong> <span style="color: #8F8E8E;">Protein</span></div>
+                        <div><strong style="color: #000;">22g</strong> <span style="color: #8F8E8E;">Fats</span></div>
+                        <div><strong style="color: #000;">42g</strong> <span style="color: #8F8E8E;">Carbs</span></div>
+                    </div>
+                </div>
+
+                <!-- Food Card 2 -->
+                <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="font-size: 16px; font-weight: 700; color: #000;">Pancakes</div>
+                            <div style="font-size: 12px; color: #8F8E8E; margin-top: 2px;">🔥 294 kcal - 100g</div>
+                        </div>
+                        <div style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #E0E0E0; display: flex; justify-content: center; align-items: center; color: #8F8E8E; font-size: 12px; cursor: pointer; background: #FAFAFA;">•••</div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 13px;">
+                        <div><strong style="color: #000;">12g</strong> <span style="color: #8F8E8E;">Protein</span></div>
+                        <div><strong style="color: #000;">22g</strong> <span style="color: #8F8E8E;">Fats</span></div>
+                        <div><strong style="color: #000;">42g</strong> <span style="color: #8F8E8E;">Carbs</span></div>
+                    </div>
+                </div>
+
+                <!-- Food Card 3 -->
+                <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="font-size: 16px; font-weight: 700; color: #000;">Greek Yogurt with Berries</div>
+                            <div style="font-size: 12px; color: #8F8E8E; margin-top: 2px;">🔥 180 kcal - 150g</div>
+                        </div>
+                        <div style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #E0E0E0; display: flex; justify-content: center; align-items: center; color: #8F8E8E; font-size: 12px; cursor: pointer; background: #FAFAFA;">•••</div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 13px;">
+                        <div><strong style="color: #000;">14g</strong> <span style="color: #8F8E8E;">Protein</span></div>
+                        <div><strong style="color: #000;">4g</strong> <span style="color: #8F8E8E;">Fats</span></div>
+                        <div><strong style="color: #000;">22g</strong> <span style="color: #8F8E8E;">Carbs</span></div>
+                    </div>
+                </div>
+
+                <!-- Food Card 4 -->
+                <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="font-size: 16px; font-weight: 700; color: #000;">Grilled Chicken Wrap</div>
+                            <div style="font-size: 12px; color: #8F8E8E; margin-top: 2px;">🔥 420 kcal - 250g</div>
+                        </div>
+                        <div style="width: 28px; height: 28px; border-radius: 50%; border: 1px solid #E0E0E0; display: flex; justify-content: center; align-items: center; color: #8F8E8E; font-size: 12px; cursor: pointer; background: #FAFAFA;">•••</div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 13px;">
+                        <div><strong style="color: #000;">35g</strong> <span style="color: #8F8E8E;">Protein</span></div>
+                        <div><strong style="color: #000;">12g</strong> <span style="color: #8F8E8E;">Fats</span></div>
+                        <div><strong style="color: #000;">40g</strong> <span style="color: #8F8E8E;">Carbs</span></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="{{ url_for('daily_menu') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+        <!-- Floating Add Button -->
+        <a href="{{ url_for('log_meal') }}" class="floating-add-btn">+</a>
+
+    </div>
+
+</body>
+</html>

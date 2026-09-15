@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add your Meal - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative; overflow-y: auto; scrollbar-width: none;">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Header: Back Arrow, Title, Notification Bell -->
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            <a href="{{ url_for('log_meal') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Add your Meal</h2>
+            <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
+                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- Date Selector Row -->
+        <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px; gap: 8px;">
+            <a href="{{ url_for('add_food', date='09-10') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
+                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #666; font-weight: 700;">10</div>
+            </a>
+            <a href="{{ url_for('add_food', date='09-11') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
+                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #666; font-weight: 700;">11</div>
+            </a>
+            <a href="{{ url_for('add_food', date='09-12') }}" style="text-decoration: none; flex: 1; background: #CDE26D; border-radius: 16px; padding: 10px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div style="font-size: 11px; color: #000; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #000; font-weight: 700;">12</div>
+            </a>
+            <a href="{{ url_for('add_food', date='09-13') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
+                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #666; font-weight: 700;">13</div>
+            </a>
+        </div>
+
+        <form action="{{ url_for('food_library') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 15px; padding-bottom: 70px;">
+
+            <!-- Meal Name Input -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">Please, enter name of the meal</label>
+                <input type="text" name="meal_name" placeholder="name" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+            </div>
+
+            <!-- Choose Meal Type Dropdown -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">Choose type of your meal</label>
+                <div style="position: relative;">
+                    <select name="meal_type" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #333;">
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Snack">Snack</option>
+                    </select>
+                    <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 14px; color: #333;">▼</span>
+                </div>
+            </div>
+
+            <!-- Protein Input -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">How much protein is in the meal?</label>
+                <input type="text" name="protein" placeholder="protein" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+            </div>
+
+            <!-- Fats Input -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">How much fats is in the meal?</label>
+                <input type="text" name="fats" placeholder="fats" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+            </div>
+
+            <!-- Calories Input -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">How many Kcal is in the meal?</label>
+                <input type="text" name="calories" placeholder="calories" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+            </div>
+
+            <!-- Save to Food Library Button -->
+            <button type="submit" style="width: 100%; background: #CDE26D; color: #000000; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">Save to Food Library</button>
+
+        </form>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="{{ url_for('food_library') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+    </div>
+
+</body>
+</html>

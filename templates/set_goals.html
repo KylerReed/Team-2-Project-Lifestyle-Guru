@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Your Goals - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+    input[type=range] {
+        -webkit-appearance: none;
+        width: 100%;
+        background: transparent;
+    }
+    input[type=range]:focus {
+        outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 6px;
+        cursor: pointer;
+        background: linear-gradient(to right, #CDE26D var(--value-percent, 50%), #E0E0E0 var(--value-percent, 50%));
+        border-radius: 3px;
+        border: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        height: 18px;
+        width: 18px;
+        border-radius: 50%;
+        background: #CDE26D;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        border: 2px solid #ffffff;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative;">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Header: Back Arrow, Title, Notification Bell -->
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            <a href="{{ url_for('dashboard') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Set Your Goals</h2>
+            <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
+                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
+            </div>
+        </div>
+
+        <form action="{{ url_for('set_goals') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+
+            <!-- Total Calories Card -->
+            <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 16px; font-weight: 700; color: #000;">Total Calories</span>
+                    <span id="calorieValueBox" style="font-size: 14px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 6px 12px; background: #fff;">2000 Kcal</span>
+                </div>
+                <input type="range" id="calorieRange" name="calories" min="1000" max="4000" value="2000" step="50" oninput="updateCalories(this.value)">
+            </div>
+
+            <!-- Macronutrient Goals Container Card (in Grams) -->
+            <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 15px;">
+                <div style="font-size: 16px; font-weight: 700; color: #000;">Macronutrient Goals (Grams)</div>
+                
+                <!-- Fats Slider -->
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px; font-weight: 600; color: #000;">Fats</span>
+                        <span id="fatsValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">70 g</span>
+                    </div>
+                    <input type="range" id="fatsRange" name="fats" min="0" max="150" value="70" step="1" oninput="updateMacros()">
+                </div>
+
+                <!-- Protein Slider -->
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px; font-weight: 600; color: #000;">Protein</span>
+                        <span id="proteinValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">120 g</span>
+                    </div>
+                    <input type="range" id="proteinRange" name="protein" min="0" max="250" value="120" step="1" oninput="updateMacros()">
+                </div>
+
+                <!-- Carbs Slider -->
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px; font-weight: 600; color: #000;">Carbs</span>
+                        <span id="carbsValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">200 g</span>
+                    </div>
+                    <input type="range" id="carbsRange" name="carbs" min="0" max="350" value="200" step="1" oninput="updateMacros()">
+                </div>
+            </div>
+
+            <!-- Save Goals Button -->
+            <button type="submit" style="width: 100%; background: #CDE26D; color: #000000; border: none; border-radius: 20px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">Save Goals</button>
+
+            <!-- Delete Goals Button -->
+            <button type="button" onclick="resetGoals()" style="width: 100%; background: #8F8E8E; color: #ffffff; border: none; border-radius: 20px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer;">Delete Goals</button>
+
+        </form>
+
+        <div class="bottom-nav">
+            <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="{{ url_for('food_library') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+        <!-- Floating Add Button -->
+        <a href="{{ url_for('log_meal') }}" class="floating-add-btn">+</a>
+
+    </div>
+
+    <!-- JavaScript to handle live scroller value updates -->
+    <script>
+        function updateSliderTrack(slider) {
+            const min = parseFloat(slider.min) || 0;
+            const max = parseFloat(slider.max) || 100;
+            const value = parseFloat(slider.value);
+            const percentage = ((value - min) / (max - min)) * 100;
+            
+            slider.style.setProperty('--value-percent', percentage + '%');
+        }
+
+        function updateCalories(val) {
+            document.getElementById('calorieValueBox').innerText = val + ' Kcal';
+            updateSliderTrack(document.getElementById('calorieRange'));
+        }
+
+        function updateMacros() {
+            const fats = document.getElementById('fatsRange').value;
+            const protein = document.getElementById('proteinRange').value;
+            const carbs = document.getElementById('carbsRange').value;
+
+            document.getElementById('fatsValueBox').innerText = fats + ' g';
+            document.getElementById('proteinValueBox').innerText = protein + ' g';
+            document.getElementById('carbsValueBox').innerText = carbs + ' g';
+
+            updateSliderTrack(document.getElementById('fatsRange'));
+            updateSliderTrack(document.getElementById('proteinRange'));
+            updateSliderTrack(document.getElementById('carbsRange'));
+        }
+
+        function resetGoals() {
+            document.getElementById('calorieRange').value = 2000;
+            document.getElementById('fatsRange').value = 70;
+            document.getElementById('proteinRange').value = 120;
+            document.getElementById('carbsRange').value = 200;
+            updateCalories(2000);
+            updateMacros();
+        }
+
+        // Initialize track colors on page load
+        window.onload = function() {
+            updateCalories(document.getElementById('calorieRange').value);
+            updateMacros();
+        };
+    </script>
+
+</body>
+</html>

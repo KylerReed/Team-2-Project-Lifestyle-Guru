@@ -1,15 +1,12 @@
 /* static/style.css */
 
-
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
-
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 
 body {
     font-family: "Quicksand", sans-serif;
@@ -30,9 +27,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     position: relative;
-    padding: 40px;
+    padding: 25px 20px;
     overflow: hidden;
 }
 
@@ -104,6 +101,18 @@ p.subtitle {
     font-size: 15px;
     font-weight: 600;
     color: #000000;
+}
+
+.status-bar .icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-bar .icons img {
+    height: 12px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* --- Sign up screen --- */
@@ -236,6 +245,12 @@ p.subtitle {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+.social-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
 /* Terms Footer */
 .terms-text {
     font-size: 10px;
@@ -249,14 +264,6 @@ p.subtitle {
 .terms-text a {
     color: #000000;
     text-decoration: underline;
-}
-
-
-/* static/style.css */
-.social-icon {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
 }
 
 /* --- Screen 3: Age --- */
@@ -291,11 +298,6 @@ p.subtitle {
 }
 
 .picker-wheel-container::-webkit-scrollbar {
-    display: none;
-}
-
-
-.picker-wheel-container::-webkit-scrollbar {
     display: none; 
 }
 
@@ -315,7 +317,6 @@ p.subtitle {
     border-radius: 12px;
 }
 
-
 .picker-item.active {
     background-color: #CDE26D;
     color: #000000;
@@ -329,13 +330,14 @@ p.subtitle {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 65px;
+    height: 70px;
     background-color: #ffffff;
     border-top: 1px solid #eaeaea;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding-bottom: 10px;
+    z-index: 100;
+    box-sizing: border-box;
 }
 
 .bottom-nav a {
@@ -347,25 +349,6 @@ p.subtitle {
 .nav-icon {
     width: 24px;
     height: 24px;
-    object-fit: contain;
-}
-
-.status-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.status-bar .icons {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.status-bar .icons img {
-    height: 12px;
-    width: auto;
     object-fit: contain;
 }
 
@@ -412,10 +395,10 @@ p.subtitle {
     width: 100%;
     max-width: 330px;
     height: 100px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
-/* Fixed Center Indicator Line */
+/* Center Indicator Line */
 .ruler-indicator-line {
     position: absolute;
     top: 0;
@@ -438,7 +421,7 @@ p.subtitle {
     display: flex;
     align-items: flex-end;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
     position: relative;
     padding-top: 10px;
 }
@@ -451,7 +434,6 @@ p.subtitle {
 .ruler-track {
     display: flex;
     align-items: flex-end;
-    
     padding-left: 155px;
     padding-right: 155px;
 }
@@ -491,16 +473,7 @@ p.subtitle {
     text-align: center;
 }
 
-/* static/style.css */
-.ruler-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 330px;
-    height: 100px;
-    margin-bottom: 20px;
-}
-
-/*  Gender Cards */
+/* Gender Cards */
 .gender-card {
     display: flex;
     align-items: center;
@@ -537,7 +510,7 @@ p.subtitle {
     background-color: #CDE26D;
 }
 
-/*  Height Card Box */
+/* Height Card Box */
 .height-output-card {
     background-color: #ffffff;
     width: 100%;
@@ -560,10 +533,30 @@ p.subtitle {
     letter-spacing: -0.5px;
 }
 
-.height-underline {
+.height-output-card .height-underline {
     width: 75%;
     height: 4px;
     background-color: #CDE26D;
     border-radius: 2px;
     margin-top: 4px;
+}
+
+/* Floating Add Button Class */
+.floating-add-btn {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #CDE26D;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #000000;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 200;
 }

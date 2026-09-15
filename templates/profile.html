@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative; overflow-y: auto; scrollbar-width: none;">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Header: Back Arrow, Title, Notification Bell -->
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            <a href="{{ url_for('dashboard') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Profile</h2>
+            <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
+                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
+            </div>
+        </div>
+
+       <form action="{{ url_for('profile') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 12px; padding-bottom: 12px; overflow-y: auto;">
+        
+            <!-- User Info Card -->
+            <div style="background: #CDE26D; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #FFD1DC; display: flex; align-items: center; justify-content: center;">
+                        <img src="{{ url_for('static', filename='user-3.png') }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div>
+                        <div style="font-size: 16px; font-weight: 700; color: #000;">Britney Spears</div>
+                        <div style="font-size: 12px; color: #333; font-weight: 500;">@toxic</div>
+                    </div>
+                </div>
+                <img src="{{ url_for('static', filename='pencil.png') }}" alt="Edit" style="width: 18px; height: 18px; object-fit: contain; opacity: 0.8; cursor: pointer;">
+            </div>
+<!-- Grid Parameters: Gender & Age -->
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">Gender</label>
+                    <div style="position: relative;">
+                        <select name="gender" style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
+                            <option value="Female" selected>Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
+                    </div>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">Age</label>
+                    <div style="position: relative;">
+                        <select name="age" style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
+                            {% for a in range(10, 101) %}
+                                <option value="{{ a }}" {% if a == 19 %}selected{% endif %}>{{ a }}</option>
+                            {% endfor %}
+                        </select>
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Parameters: Weight & Height -->
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">Weight</label>
+                    <div style="position: relative;">
+                        <select name="weight" style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
+                            {% for w in range(30, 201) %}
+                                <option value="{{ w }} kg" {% if w == 62 %}selected{% endif %}>{{ w }} kg</option>
+                            {% endfor %}
+                        </select>
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
+                    </div>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">Height</label>
+                    <div style="position: relative;">
+                        <select name="height" style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
+                            {% if user_height_unit == 'in' %}
+                <!-- Full range for inches (36 in to 96 in) -->
+                                {% for h in range(36, 97) %}
+                                    <option value="{{ h }} in" {% if user_height_value == h %}selected{% endif %}>{{ h }} in</option>
+                                {% endfor %}
+                            {% else %}
+                <!-- Full range for centimeters (100 cm to 231 cm) -->
+                                {% for h in range(100, 231) %}
+                                    <option value="{{ h }} cm" {% if user_height_value == h %}selected{% endif %}>{{ h }} cm</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Parameters: Activity Level & Goal -->
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">Activity level</label>
+                    <div style="position: relative;">
+                        <select name="activity_level" style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
+                            <option value="Sedentary">Sedentary</option>
+                            <option value="Lightly Active">Lightly Active</option>
+                            <option value="Moderately Active" selected>Moderately Active</option>
+                            <option value="Very Active">Very Active</option>
+                        </select>
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
+                    </div>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">Goal</label>
+                    <div style="position: relative;">
+                        <select name="goal" style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
+                            <option value="Lose weight">Lose weight</option>
+                            <option value="Maintain weight">Maintain weight</option>
+                            <option value="Gain weight" selected>Gain weight</option>
+                        </select>
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BMI & BMR Computed Boxes -->
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">BMI</label>
+                    <input type="text" value="22.0" readonly style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; box-sizing: border-box; font-weight: 600; color: #333;">
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #000;">BMR</label>
+                    <input type="text" value="1700 Kcal" readonly style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; box-sizing: border-box; font-weight: 600; color: #333;">
+                </div>
+            </div>
+
+            <!-- Save Changes Button -->
+            <button type="submit" style="width: 100%; background: #CDE26D; color: #000000; border: none; border-radius: 20px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-top: 5px;">Save Profile Changes</button>
+
+            <!-- More Section Menu -->
+            
+            <div style="display: flex; flex-direction: column; background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                <a href="#" style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #000; font-size: 14px; font-weight: 500; border-bottom: 1px solid #F0F0F0;">
+                    <span>My Favorites</span>
+                    <span style="color: #8F8E8E; font-weight: bold;">›</span>
+                </a>
+                <a href="#" style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #000; font-size: 14px; font-weight: 500; border-bottom: 1px solid #F0F0F0;">
+                    <span>Add another profile</span>
+                    <span style="color: #8F8E8E; font-weight: bold;">›</span>
+                </a>
+                <a href="#" style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #000; font-size: 14px; font-weight: 500; border-bottom: 1px solid #F0F0F0;">
+                    <span>Delete profile</span>
+                    <span style="color: #8F8E8E; font-weight: bold;">›</span>
+                </a>
+                <a href="{{ url_for('login') }}" style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #FF3B30; font-size: 14px; font-weight: 600;">
+                    <span>Log out</span>
+                    <span style="color: #FF3B30; font-weight: bold;">›</span>
+                </a>
+            </div>
+
+        </form>
+
+        <!-- Bottom Navigation Bar -->
+         <div class="bottom-nav">
+            <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="{{ url_for('food_library') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+    </div>
+
+</body>
+</html>

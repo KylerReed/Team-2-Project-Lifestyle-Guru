@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals and progress - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative;">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Header: Back Arrow, Title, Notification Bell -->
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            <a href="{{ url_for('goal') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Goals and progress</h2>
+            <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
+                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- User Profile Row -->
+        <a href="{{ url_for('profile') }}" style="display: flex; align-items: center; width: 100%; margin-bottom: 20px; position: relative; text-decoration: none;">
+            <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; margin-right: 12px; background: #FFD1DC; display: flex; align-items: center; justify-content: center;">
+                <img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+                <div style="font-size: 12px; color: #8F8E8E; font-weight: 500;">Welcome</div>
+                <div style="font-size: 16px; font-weight: 700; color: #000;">Britney Spears</div>
+            </div>
+            <div style="position: absolute; right: 0; display: flex; align-items: center; justify-content: center;">
+                <img src="{{ url_for('static', filename='pencil.png') }}" alt="Edit Profile" style="width: 18px; height: 18px; object-fit: contain; opacity: 0.8;">
+            </div>
+        </a>
+
+        <!-- Date Selector Row -->
+        <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px; gap: 8px;">
+            <a href="{{ url_for('dashboard', date='09-10') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
+                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #666; font-weight: 700;">10</div>
+            </a>
+            <a href="{{ url_for('dashboard', date='09-11') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
+                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #666; font-weight: 700;">11</div>
+            </a>
+            <a href="{{ url_for('dashboard', date='09-12') }}" style="text-decoration: none; flex: 1; background: #CDE26D; border-radius: 16px; padding: 10px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div style="font-size: 11px; color: #000; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #000; font-weight: 700;">12</div>
+            </a>
+            <a href="{{ url_for('dashboard', date='09-13') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
+                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
+                <div style="font-size: 16px; color: #666; font-weight: 700;">13</div>
+            </a>
+        </div>
+
+        <!-- Calorie Circular Progress Card -->
+        <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 20px; padding: 15px; width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; box-sizing: border-box;">
+            <div style="width: 140px; height: 75px; border-top-left-radius: 75px; border-top-right-radius: 75px; background: conic-gradient(from 180deg at 50% 100%, #FFCC00 0deg, #FFCC00 220deg, #E0E0E0 220deg, #E0E0E0 360deg); position: relative; display: flex; align-items: flex-end; justify-content: center;">
+                <div style="width: 112px; height: 56px; border-top-left-radius: 56px; border-top-right-radius: 56px; background: #ffffff;"></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; margin-top: -10px;">
+                <img src="{{ url_for('static', filename='heart.png') }}" alt="Heart" style="width: 16px; height: 16px; object-fit: contain;">
+            </div>
+            <div style="font-size: 24px; font-weight: 800; color: #000; margin-top: 2px;">1721 Kcal</div>
+            <div style="font-size: 11px; color: #8F8E8E; font-weight: 500;">of 2213 kcal</div>
+        </div>
+
+        <!-- Nutrient Cards Container -->
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+            
+            <!-- Protein Card -->
+            <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #000; margin-bottom: 6px;">
+                    <span>Protein</span>
+                </div>
+                <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
+                    <div style="background: #CDE26D; height: 100%; width: 100%;"></div>
+                </div>
+                <div style="font-size: 11px; color: #8F8E8E;">110/110g</div>
+            </div>
+
+            <!-- Fats Card -->
+            <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #000; margin-bottom: 6px;">
+                    <span>Fats</span>
+                </div>
+                <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
+                    <div style="background: #FFCC00; height: 100%; width: 56%;"></div>
+                </div>
+                <div style="font-size: 11px; color: #8F8E8E;">45/80g</div>
+            </div>
+
+            <!-- Carbs Card -->
+            <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #000; margin-bottom: 6px;">
+                    <span>Carbs</span>
+                </div>
+                <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
+                    <div style="background: #FFCC00; height: 100%; width: 86%;"></div>
+                </div>
+                <div style="font-size: 11px; color: #8F8E8E;">78/90g</div>
+            </div>
+
+        </div>
+
+        <!-- Add/Edit Goals Button -->
+       <div style="display: flex; gap: 10px; width: 100%; max-width: 330px; margin: -3px auto; padding: 0 10px;">
+    <a href="{{ url_for('set_goals') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Add/Edit Goals</a>
+    
+    <a href="{{ url_for('daily_menu') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Your Daily Menu</a>
+</div>
+         <div class="bottom-nav">
+            <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a>
+            <a href="{{ url_for('food_library') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a>
+        </div>
+
+        <!-- Floating Add Button  -->
+        <a href="{{ url_for('log_meal') }}" class="floating-add-btn">+</a>
+
+    </div>
+
+</body>
+</html>
