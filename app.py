@@ -53,6 +53,30 @@ def get_food_form_values():
     return name, meal_type, calories, protein, carbohydrates, fats
 
 
+def get_compact_date_options(requested_date):
+    """Build the four-date selector used by dashboard and Add Food screens."""
+    try:
+        selected_date = (
+            date.fromisoformat(requested_date) if requested_date else date.today()
+        )
+    except ValueError:
+        selected_date = date.today()
+
+    date_options = []
+    for offset in (-1, 0, 1, 2):
+        option_date = selected_date + timedelta(days=offset)
+        date_options.append(
+            {
+                "value": option_date.isoformat(),
+                "month": option_date.strftime("%b"),
+                "day": option_date.day,
+                "is_selected": option_date == selected_date,
+            }
+        )
+
+    return selected_date, date_options
+
+
 @app.route("/")
 def welcome():
     return render_template("welcome.html")
@@ -132,27 +156,7 @@ def goal():
 
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
-    # Keep a real date in the application layer.  The compact selector is a
-    # four-day window around the selected date, including future dates.
-    requested_date = request.args.get("date")
-    try:
-        selected_date = (
-            date.fromisoformat(requested_date) if requested_date else date.today()
-        )
-    except ValueError:
-        selected_date = date.today()
-
-    date_options = []
-    for offset in (-1, 0, 1, 2):
-        option_date = selected_date + timedelta(days=offset)
-        date_options.append(
-            {
-                "value": option_date.isoformat(),
-                "month": option_date.strftime("%b"),
-                "day": option_date.day,
-                "is_selected": option_date == selected_date,
-            }
-        )
+    selected_date, date_options = get_compact_date_options(request.args.get("date"))
 
     return render_template(
         "dashboard.html",
@@ -214,7 +218,10 @@ def add_food():
             )
 
         return redirect(url_for("food_library", filter="az"))
-    return render_template("add_food.html")
+    selected_date, date_options = get_compact_date_options(request.args.get("date"))
+    return render_template(
+        "add_food.html", selected_date=selected_date, date_options=date_options
+    )
 
 
 @app.route("/food_library", methods=["GET", "POST"])
@@ -288,7 +295,14 @@ def edit_food(food_id):
             )
             return redirect(url_for("food_library", filter="az"))
 
-    return render_template("add_food.html", editing=True, food=food_item)
+    selected_date, date_options = get_compact_date_options(request.args.get("date"))
+    return render_template(
+        "add_food.html",
+        editing=True,
+        food=food_item,
+        selected_date=selected_date,
+        date_options=date_options,
+    )
 
 
 @app.route("/set_goals", methods=["GET", "POST"])
