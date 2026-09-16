@@ -44,22 +44,12 @@
 
         <!-- Date Selector Row -->
         <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px; gap: 8px;">
-            <a href="{{ url_for('dashboard', date='09-10') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
-                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
-                <div style="font-size: 16px; color: #666; font-weight: 700;">10</div>
-            </a>
-            <a href="{{ url_for('dashboard', date='09-11') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
-                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
-                <div style="font-size: 16px; color: #666; font-weight: 700;">11</div>
-            </a>
-            <a href="{{ url_for('dashboard', date='09-12') }}" style="text-decoration: none; flex: 1; background: #CDE26D; border-radius: 16px; padding: 10px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                <div style="font-size: 11px; color: #000; font-weight: 600;">Sept</div>
-                <div style="font-size: 16px; color: #000; font-weight: 700;">12</div>
-            </a>
-            <a href="{{ url_for('dashboard', date='09-13') }}" style="text-decoration: none; flex: 1; background: #F5F5F5; border-radius: 16px; padding: 10px 0; text-align: center; border: 1px solid #E0E0E0;">
-                <div style="font-size: 11px; color: #666; font-weight: 600;">Sept</div>
-                <div style="font-size: 16px; color: #666; font-weight: 700;">13</div>
-            </a>
+            {% for date_option in date_options %}
+                <a href="{{ url_for('dashboard', date=date_option.value) }}" style="text-decoration: none; flex: 1; background: {% if date_option.is_selected %}#CDE26D{% else %}#F5F5F5{% endif %}; border-radius: 16px; padding: 10px 0; text-align: center; border: {% if date_option.is_selected %}none{% else %}1px solid #E0E0E0{% endif %}; box-shadow: {% if date_option.is_selected %}0 2px 8px rgba(0,0,0,0.05){% else %}none{% endif %};">
+                    <div style="font-size: 11px; color: {% if date_option.is_selected %}#000{% else %}#666{% endif %}; font-weight: 600;">{{ date_option.month }}</div>
+                    <div style="font-size: 16px; color: {% if date_option.is_selected %}#000{% else %}#666{% endif %}; font-weight: 700;">{{ date_option.day }}</div>
+                </a>
+            {% endfor %}
         </div>
 
         <!-- Calorie Circular Progress Card -->

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add your Meal - Lifestyle Guru</title>
+    <title>{% if editing %}Edit Food{% else %}Add your Meal{% endif %} - Lifestyle Guru</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -21,8 +21,8 @@
 
         <!-- Header: Back Arrow, Title, Notification Bell -->
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
-            <a href="{{ url_for('log_meal') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
-            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Add your Meal</h2>
+            <a href="{% if editing %}{{ url_for('food_library', filter='az') }}{% else %}{{ url_for('log_meal') }}{% endif %}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">{% if editing %}Edit Food{% else %}Add your Meal{% endif %}</h2>
             <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
                 <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
             </div>
@@ -48,12 +48,12 @@
             </a>
         </div>
 
-        <form action="{{ url_for('food_library') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 15px; padding-bottom: 70px;">
+        <form action="{% if editing %}{{ url_for('edit_food', food_id=food['id']) }}{% else %}{{ url_for('add_food') }}{% endif %}" method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 15px; padding-bottom: 70px;">
 
             <!-- Meal Name Input -->
             <div style="display: flex; flex-direction: column; gap: 6px;">
                 <label style="font-size: 14px; font-weight: 700; color: #000;">Please, enter name of the meal</label>
-                <input type="text" name="meal_name" placeholder="name" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+                <input type="text" name="meal_name" placeholder="name" value="{{ food['name'] if editing else '' }}" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
             </div>
 
             <!-- Choose Meal Type Dropdown -->
@@ -61,10 +61,10 @@
                 <label style="font-size: 14px; font-weight: 700; color: #000;">Choose type of your meal</label>
                 <div style="position: relative;">
                     <select name="meal_type" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #333;">
-                        <option value="Breakfast">Breakfast</option>
-                        <option value="Lunch">Lunch</option>
-                        <option value="Dinner">Dinner</option>
-                        <option value="Snack">Snack</option>
+                        <option value="Breakfast" {% if editing and food['meal_type'] == 'Breakfast' %}selected{% endif %}>Breakfast</option>
+                        <option value="Lunch" {% if editing and food['meal_type'] == 'Lunch' %}selected{% endif %}>Lunch</option>
+                        <option value="Dinner" {% if editing and food['meal_type'] == 'Dinner' %}selected{% endif %}>Dinner</option>
+                        <option value="Snack" {% if editing and food['meal_type'] == 'Snack' %}selected{% endif %}>Snack</option>
                     </select>
                     <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 14px; color: #333;">▼</span>
                 </div>
@@ -72,24 +72,30 @@
 
             <!-- Protein Input -->
             <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-size: 14px; font-weight: 700; color: #000;">How much protein is in the meal?</label>
-                <input type="text" name="protein" placeholder="protein" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">Protein (g)</label>
+                <input type="number" name="protein" min="0" step="0.1" placeholder="grams" value="{{ food['protein_grams'] if editing else '' }}" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+            </div>
+
+            <!-- Carbohydrates Input -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">Carbohydrates (g)</label>
+                <input type="number" name="carbs" min="0" step="0.1" placeholder="grams" value="{{ food['carbohydrate_grams'] if editing else '' }}" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
             </div>
 
             <!-- Fats Input -->
             <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-size: 14px; font-weight: 700; color: #000;">How much fats is in the meal?</label>
-                <input type="text" name="fats" placeholder="fats" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">Fats (g)</label>
+                <input type="number" name="fats" min="0" step="0.1" placeholder="grams" value="{{ food['fat_grams'] if editing else '' }}" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
             </div>
 
             <!-- Calories Input -->
             <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-size: 14px; font-weight: 700; color: #000;">How many Kcal is in the meal?</label>
-                <input type="text" name="calories" placeholder="calories" style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
+                <label style="font-size: 14px; font-weight: 700; color: #000;">Calories (kcal)</label>
+                <input type="number" name="calories" min="0" step="1" placeholder="kcal" value="{{ food['calories'] if editing else '' }}" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #CDE26D; border-radius: 14px; outline: none; font-size: 14px; background: #ffffff; box-sizing: border-box;">
             </div>
 
             <!-- Save to Food Library Button -->
-            <button type="submit" style="width: 100%; background: #CDE26D; color: #000000; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">Save to Food Library</button>
+            <button type="submit" style="width: 100%; background: #CDE26D; color: #000000; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">{% if editing %}Save Changes{% else %}Save to Food Library{% endif %}</button>
 
         </form>
 

@@ -51,8 +51,9 @@
         </div>
 
         <!-- Form / Continue Button -->
-        <form action="{{ url_for('gender') }}" method="POST" style="width: 100%; display: flex; justify-content: center; z-index: 10;">
+        <form action="{{ url_for('weight') }}" method="POST" style="width: 100%; display: flex; justify-content: center; z-index: 10;">
             <input type="hidden" name="selected_weight" id="selectedWeightInput" value="62">
+            <input type="hidden" name="weight_unit" id="selectedWeightUnitInput" value="Kg">
             <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px;">Continue</button>
         </form>
 
@@ -71,9 +72,13 @@
         const rulerContainer = document.getElementById('rulerContainer');
         const weightOutput = document.getElementById('weightOutput');
         const selectedWeightInput = document.getElementById('selectedWeightInput');
+        const selectedWeightUnitInput = document.getElementById('selectedWeightUnitInput');
         
+        // Store kilograms as the one stable value.  The ruler value is only
+        // a display value, so unit button presses never reconvert a value.
         let currentUnit = 'Kg';
-        let currentVal = 62;
+        let weightKg = 62;
+        let programmaticRulerScroll = false;
 
         const ranges = {
             'Kg': { min: 30, max: 150, defaultVal: 62 },
@@ -112,19 +117,42 @@
             setTimeout(() => {
                 const targetGroup = rulerTrack.querySelector(`[data-value="${val}"]`);
                 if (targetGroup) {
+                    programmaticRulerScroll = true;
                     rulerContainer.scrollLeft = targetGroup.offsetLeft - rulerContainer.clientWidth / 2 + targetGroup.clientWidth / 2;
+                    setTimeout(() => {
+                        programmaticRulerScroll = false;
+                    }, 100);
                 }
             }, 50);
         }
 
+        function displayValue() {
+            return currentUnit === 'Kg' ? weightKg : weightKg * 2.20462;
+        }
+
+        function syncWeightDisplay() {
+            const roundedValue = Math.round(displayValue());
+
+            document.getElementById('kgBtn').classList.toggle('active', currentUnit === 'Kg');
+            document.getElementById('lbsBtn').classList.toggle('active', currentUnit === 'Lbs');
+            weightOutput.innerText = `${roundedValue} ${currentUnit}`;
+            selectedWeightInput.value = roundedValue;
+            selectedWeightUnitInput.value = currentUnit;
+        }
+
         buildRuler();
-        scrollToValue(ranges['Kg'].defaultVal);
+        syncWeightDisplay();
+        scrollToValue(Math.round(displayValue()));
 
         rulerContainer.addEventListener('scroll', () => {
+            if (programmaticRulerScroll) {
+                return;
+            }
+
             const containerCenter = rulerContainer.clientWidth / 2;
             const groups = rulerTrack.querySelectorAll('.ruler-tick-group[data-value]');
             
-            let closestVal = ranges[currentUnit].defaultVal;
+            let closestVal = Math.round(displayValue());
             let minDistance = Infinity;
 
             groups.forEach(group => {
@@ -139,32 +167,18 @@
                 }
             });
 
-            currentVal = closestVal;
-            weightOutput.innerText = `${currentVal} ${currentUnit}`;
-            selectedWeightInput.value = currentVal;
+            const selectedDisplayValue = Number(closestVal);
+            weightKg = currentUnit === 'Kg'
+                ? selectedDisplayValue
+                : selectedDisplayValue / 2.20462;
+            syncWeightDisplay();
         });
 
         function setUnit(unit) {
-            if (currentUnit === unit) return;
-
-            if (unit === 'Lbs') {
-                currentVal = Math.round(currentVal * 2.20462);
-                if (currentVal > 330) currentVal = 330;
-                if (currentVal < 66) currentVal = 66;
-            } else {
-                currentVal = Math.round(currentVal / 2.20462);
-                if (currentVal > 150) currentVal = 150;
-                if (currentVal < 30) currentVal = 30;
-            }
-
             currentUnit = unit;
-            document.getElementById('kgBtn').classList.toggle('active', unit === 'Kg');
-            document.getElementById('lbsBtn').classList.toggle('active', unit === 'Lbs');
-
             buildRuler();
-            scrollToValue(currentVal);
-            weightOutput.innerText = `${currentVal} ${currentUnit}`;
-            selectedWeightInput.value = currentVal;
+            syncWeightDisplay();
+            scrollToValue(Math.round(displayValue()));
         }
     </script>
 

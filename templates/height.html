@@ -38,12 +38,13 @@
         </div>
 
         <!-- Form with Type-in Input Field -->
-        <form action="{{ url_for('activity') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <form id="heightForm" action="{{ url_for('height') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
             
             <div class="height-output-card" style="background: #ffffff; width: 100%; max-width: 310px; padding: 20px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;">
-                <input type="number" name="height_value" id="heightInput" value="168" min="50" max="300" style="font-size: 36px; font-weight: bold; color: #9ACd32; border: none; outline: none; background: transparent; text-align: center; width: 120px;">
+                <input type="number" name="height_value" id="heightInput" value="168" min="100" max="230" step="0.01" required style="font-size: 36px; font-weight: bold; color: #9ACd32; border: none; outline: none; background: transparent; text-align: center; width: 120px;">
                 <span id="unitLabel" style="font-size: 36px; font-weight: bold; color: #9ACd32; margin-left: 5px;">cm</span>
             </div>
+            <input type="hidden" name="height_unit" id="heightUnitInput" value="cm">
 
             <!-- Continue Button -->
             <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px; border: none; cursor: pointer; margin-top: 15px;">Continue</button>
@@ -62,23 +63,77 @@
     <script>
         const unitLabel = document.getElementById('unitLabel');
         const heightInput = document.getElementById('heightInput');
+        const heightUnitInput = document.getElementById('heightUnitInput');
+        const heightForm = document.getElementById('heightForm');
+
+        const limits = {
+            Cm: { min: 100, max: 230, label: 'cm', formValue: 'cm' },
+            Inch: { min: 39.37, max: 90.55, label: 'in', formValue: 'in' }
+        };
+
+        // Form controls can be restored by browser history.  Start from the
+        // restored hidden value so the highlight, label, and submitted unit
+        // always describe the same display value.
+        let currentUnit = heightUnitInput.value === 'in' ? 'Inch' : 'Cm';
+        let heightCm = Number(heightInput.value) * (currentUnit === 'Inch' ? 2.54 : 1);
+
+        function currentDisplayHeight() {
+            return currentUnit === 'Cm' ? heightCm : heightCm / 2.54;
+        }
+
+        function saveDisplayedHeight() {
+            const value = Number(heightInput.value);
+            const limit = limits[currentUnit];
+
+            if (!Number.isFinite(value) || value < limit.min || value > limit.max) {
+                return false;
+            }
+
+            heightCm = currentUnit === 'Cm' ? value : value * 2.54;
+            return true;
+        }
+
+        function syncHeightDisplay() {
+            const limit = limits[currentUnit];
+            const roundedValue = Math.round(currentDisplayHeight() * 100) / 100;
+
+            document.getElementById('cmBtn').classList.toggle('active', currentUnit === 'Cm');
+            document.getElementById('inchBtn').classList.toggle('active', currentUnit === 'Inch');
+            unitLabel.innerText = limit.label;
+            heightInput.min = limit.min;
+            heightInput.max = limit.max;
+            heightInput.value = roundedValue;
+            heightUnitInput.value = limit.formValue;
+        }
         
         function setUnit(unit) {
-            document.getElementById('cmBtn').classList.toggle('active', unit === 'Cm');
-            document.getElementById('inchBtn').classList.toggle('active', unit === 'Inch');
-
-            if (unit === 'Inch') {
-                unitLabel.innerText = 'in';
-                heightInput.value = Math.round(heightInput.value / 2.54);
-                heightInput.min = 20;
-                heightInput.max = 120;
-            } else {
-                unitLabel.innerText = 'cm';
-                heightInput.value = Math.round(heightInput.value * 2.54);
-                heightInput.min = 50;
-                heightInput.max = 300;
+            if (!limits[unit]) {
+                return;
             }
+
+            if (!saveDisplayedHeight()) {
+                heightInput.reportValidity();
+                return;
+            }
+
+            currentUnit = unit;
+            syncHeightDisplay();
         }
+
+        heightInput.addEventListener('input', () => {
+            if (heightInput.validity.valid) {
+                saveDisplayedHeight();
+            }
+        });
+
+        heightForm.addEventListener('submit', event => {
+            if (!saveDisplayedHeight()) {
+                event.preventDefault();
+                heightInput.reportValidity();
+            }
+        });
+
+        syncHeightDisplay();
     </script>
 
 </body>
