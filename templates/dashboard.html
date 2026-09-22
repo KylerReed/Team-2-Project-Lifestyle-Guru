@@ -61,7 +61,7 @@
                 <img src="{{ url_for('static', filename='heart.png') }}" alt="Heart" style="width: 16px; height: 16px; object-fit: contain;">
             </div>
             <div style="font-size: 24px; font-weight: 800; color: #000; margin-top: 2px;">1721 Kcal</div>
-            <div style="font-size: 11px; color: #8F8E8E; font-weight: 500;">of 2213 kcal</div>
+            <div style="font-size: 11px; color: #8F8E8E; font-weight: 500;">of {{ goal_targets.calories }} kcal</div>
         </div>
 
         <!-- Nutrient Cards Container -->
@@ -75,7 +75,7 @@
                 <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
                     <div style="background: #CDE26D; height: 100%; width: 100%;"></div>
                 </div>
-                <div style="font-size: 11px; color: #8F8E8E;">110/110g</div>
+                <div style="font-size: 11px; color: #8F8E8E;">110/{{ goal_targets.protein }}g</div>
             </div>
 
             <!-- Fats Card -->
@@ -86,7 +86,7 @@
                 <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
                     <div style="background: #FFCC00; height: 100%; width: 56%;"></div>
                 </div>
-                <div style="font-size: 11px; color: #8F8E8E;">45/80g</div>
+                <div style="font-size: 11px; color: #8F8E8E;">45/{{ goal_targets.fats }}g</div>
             </div>
 
             <!-- Carbs Card -->
@@ -97,7 +97,7 @@
                 <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
                     <div style="background: #FFCC00; height: 100%; width: 86%;"></div>
                 </div>
-                <div style="font-size: 11px; color: #8F8E8E;">78/90g</div>
+                <div style="font-size: 11px; color: #8F8E8E;">78/{{ goal_targets.carbs }}g</div>
             </div>
 
         </div>

@@ -63,9 +63,9 @@
             <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 16px; font-weight: 700; color: #000;">Total Calories</span>
-                    <span id="calorieValueBox" style="font-size: 14px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 6px 12px; background: #fff;">2000 Kcal</span>
+                    <span id="calorieValueBox" style="font-size: 14px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 6px 12px; background: #fff;">{{ goal_values.calories }} Kcal</span>
                 </div>
-                <input type="range" id="calorieRange" name="calories" min="1000" max="4000" value="2000" step="50" oninput="updateCalories(this.value)">
+                <input type="range" id="calorieRange" name="calories" min="1000" max="4000" value="{{ goal_values.calories }}" step="50" oninput="updateCalories(this.value)">
             </div>
 
             <!-- Macronutrient Goals Container Card (in Grams) -->
@@ -76,27 +76,27 @@
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 14px; font-weight: 600; color: #000;">Fats</span>
-                        <span id="fatsValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">70 g</span>
+                        <span id="fatsValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">{{ goal_values.fats }} g</span>
                     </div>
-                    <input type="range" id="fatsRange" name="fats" min="0" max="150" value="70" step="1" oninput="updateMacros()">
+                    <input type="range" id="fatsRange" name="fats" min="0" max="150" value="{{ goal_values.fats }}" step="1" oninput="updateMacros()">
                 </div>
 
                 <!-- Protein Slider -->
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 14px; font-weight: 600; color: #000;">Protein</span>
-                        <span id="proteinValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">120 g</span>
+                        <span id="proteinValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">{{ goal_values.protein }} g</span>
                     </div>
-                    <input type="range" id="proteinRange" name="protein" min="0" max="250" value="120" step="1" oninput="updateMacros()">
+                    <input type="range" id="proteinRange" name="protein" min="0" max="250" value="{{ goal_values.protein }}" step="1" oninput="updateMacros()">
                 </div>
 
                 <!-- Carbs Slider -->
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 14px; font-weight: 600; color: #000;">Carbs</span>
-                        <span id="carbsValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">200 g</span>
+                        <span id="carbsValueBox" style="font-size: 13px; font-weight: 700; color: #000; border: 1.5px solid #E0E0E0; border-radius: 10px; padding: 4px 10px; background: #fff;">{{ goal_values.carbs }} g</span>
                     </div>
-                    <input type="range" id="carbsRange" name="carbs" min="0" max="350" value="200" step="1" oninput="updateMacros()">
+                    <input type="range" id="carbsRange" name="carbs" min="0" max="350" value="{{ goal_values.carbs }}" step="1" oninput="updateMacros()">
                 </div>
             </div>
 
