@@ -18,7 +18,7 @@ class UserProfile(Base):
 
     name = Column(String(100), nullable=False)
     age = Column(Integer, nullable=False)
-    sex = Column(String(20), nullable=False)
+    gender = Column(String(20), nullable=False)
 
     unit_system = Column(
         String(20),
