@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Meal - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative; overflow-y: auto;">
+        <div class="status-bar"><span>9:41</span><div class="icons"><img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi"><img src="{{ url_for('static', filename='battery.png') }}" alt="Battery"></div></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            <a href="{{ url_for('food_library') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000;">Log Meal</h2>
+            <div style="width: 36px;"></div>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; background: #FFF3CD; color: #333; font-size: 13px;">{{ message }}</div>{% endfor %}{% endwith %}
+        <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 16px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">
+            <div style="font-size: 17px; font-weight: 700; color: #000;">{{ food['name'] }}</div>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">{{ food['calories']|round(1) }} kcal · P {{ food['protein_grams']|round(1) }}g · F {{ food['fat_grams']|round(1) }}g · C {{ food['carbohydrate_grams']|round(1) }}g</div>
+        </div>
+        <form method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;"><label style="font-size: 14px; font-weight: 700;">Date</label><input type="date" name="meal_date" value="{{ selected_date }}" required style="padding: 12px; border: 1.5px solid #CDE26D; border-radius: 14px; font-size: 14px;"></div>
+            <div style="display: flex; flex-direction: column; gap: 6px;"><label style="font-size: 14px; font-weight: 700;">Meal category</label><select name="meal_type" style="padding: 12px; border: 1.5px solid #CDE26D; border-radius: 14px; font-size: 14px; background: #ffffff;">{% for meal in ['Breakfast', 'Lunch', 'Dinner', 'Snacks'] %}<option value="{{ meal }}" {% if meal == selected_meal %}selected{% endif %}>{{ meal }}</option>{% endfor %}</select></div>
+            <button type="submit" style="width: 100%; background: #CDE26D; color: #000; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer;">Save Meal</button>
+        </form>
+        <div class="bottom-nav"><a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a><a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile" class="nav-icon"></a><a href="{{ url_for('food_library') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}" alt="Chef" class="nav-icon"></a></div>
+    </div>
+</body>
+</html>

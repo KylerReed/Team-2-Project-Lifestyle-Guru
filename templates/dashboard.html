@@ -35,7 +35,7 @@
             </div>
             <div>
                 <div style="font-size: 12px; color: #8F8E8E; font-weight: 500;">Welcome</div>
-                <div style="font-size: 16px; font-weight: 700; color: #000;">Britney Spears</div>
+                <div style="font-size: 16px; font-weight: 700; color: #000;">{{ profile_name }}</div>
             </div>
             <div style="position: absolute; right: 0; display: flex; align-items: center; justify-content: center;">
                 <img src="{{ url_for('static', filename='pencil.png') }}" alt="Edit Profile" style="width: 18px; height: 18px; object-fit: contain; opacity: 0.8;">
@@ -54,14 +54,14 @@
 
         <!-- Calorie Circular Progress Card -->
         <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 20px; padding: 15px; width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; box-sizing: border-box;">
-            <div style="width: 140px; height: 75px; border-top-left-radius: 75px; border-top-right-radius: 75px; background: conic-gradient(from 180deg at 50% 100%, #FFCC00 0deg, #FFCC00 220deg, #E0E0E0 220deg, #E0E0E0 360deg); position: relative; display: flex; align-items: flex-end; justify-content: center;">
+            <div style="width: 140px; height: 75px; border-top-left-radius: 75px; border-top-right-radius: 75px; background: conic-gradient(from 180deg at 50% 100%, #FFCC00 0deg, #FFCC00 {{ (progress.calories * 1.8)|round(1) }}deg, #E0E0E0 {{ (progress.calories * 1.8)|round(1) }}deg, #E0E0E0 360deg); position: relative; display: flex; align-items: flex-end; justify-content: center;">
                 <div style="width: 112px; height: 56px; border-top-left-radius: 56px; border-top-right-radius: 56px; background: #ffffff;"></div>
             </div>
             <div style="display: flex; align-items: center; gap: 4px; margin-top: -10px;">
                 <img src="{{ url_for('static', filename='heart.png') }}" alt="Heart" style="width: 16px; height: 16px; object-fit: contain;">
             </div>
-            <div style="font-size: 24px; font-weight: 800; color: #000; margin-top: 2px;">1721 Kcal</div>
-            <div style="font-size: 11px; color: #8F8E8E; font-weight: 500;">of {{ goal_targets.calories }} kcal</div>
+            <div style="font-size: 24px; font-weight: 800; color: #000; margin-top: 2px;">{{ consumed_display.calories }} Kcal</div>
+            <div style="font-size: 11px; color: #8F8E8E; font-weight: 500;">{{ consumed_display.calories }} / {{ goal_targets.calories }} kcal</div>
         </div>
 
         <!-- Nutrient Cards Container -->
@@ -73,9 +73,9 @@
                     <span>Protein</span>
                 </div>
                 <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
-                    <div style="background: #CDE26D; height: 100%; width: 100%;"></div>
+                    <div style="background: #CDE26D; height: 100%; width: {{ progress.protein }}%;"></div>
                 </div>
-                <div style="font-size: 11px; color: #8F8E8E;">110/{{ goal_targets.protein }}g</div>
+                <div style="font-size: 11px; color: #8F8E8E;">{{ consumed_display.protein }} / {{ goal_targets.protein }}g</div>
             </div>
 
             <!-- Fats Card -->
@@ -84,9 +84,9 @@
                     <span>Fats</span>
                 </div>
                 <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
-                    <div style="background: #FFCC00; height: 100%; width: 56%;"></div>
+                    <div style="background: #FFCC00; height: 100%; width: {{ progress.fats }}%;"></div>
                 </div>
-                <div style="font-size: 11px; color: #8F8E8E;">45/{{ goal_targets.fats }}g</div>
+                <div style="font-size: 11px; color: #8F8E8E;">{{ consumed_display.fats }} / {{ goal_targets.fats }}g</div>
             </div>
 
             <!-- Carbs Card -->
@@ -95,9 +95,9 @@
                     <span>Carbs</span>
                 </div>
                 <div style="background: #E0E0E0; border-radius: 4px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
-                    <div style="background: #FFCC00; height: 100%; width: 86%;"></div>
+                    <div style="background: #FFCC00; height: 100%; width: {{ progress.carbs }}%;"></div>
                 </div>
-                <div style="font-size: 11px; color: #8F8E8E;">78/{{ goal_targets.carbs }}g</div>
+                <div style="font-size: 11px; color: #8F8E8E;">{{ consumed_display.carbs }} / {{ goal_targets.carbs }}g</div>
             </div>
 
         </div>
@@ -106,7 +106,7 @@
        <div style="display: flex; gap: 10px; width: 100%; max-width: 330px; margin: -3px auto; padding: 0 10px;">
     <a href="{{ url_for('set_goals') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Add/Edit Goals</a>
     
-    <a href="{{ url_for('daily_menu') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Your Daily Menu</a>
+    <a href="{{ url_for('daily_menu', date=selected_date, meal='Breakfast') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Your Daily Menu</a>
 </div>
          <div class="bottom-nav">
             <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>

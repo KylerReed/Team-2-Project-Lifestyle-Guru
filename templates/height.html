@@ -1,12 +1,14 @@
 <!-- templates/height.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Height - Lifestyle Guru</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
     <div class="phone-screen login-bg">
@@ -24,12 +26,20 @@
         <a href="{{ url_for('gender') }}" class="back-arrow">←</a>
 
         <!-- Logo -->
-        <div class="logo-container" style="width: 110px; height: 110px; margin-top: 80px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        <div class="logo-container"
+            style="width: 110px; height: 110px; margin-top: 80px; margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"
+                style="width: 100%; height: 100%; object-fit: contain;">
         </div>
 
         <!-- Heading -->
-        <h1 class="main-title" style="font-size: 22px; height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: #000000; text-align: center;">What’s your current height?</h1>
+        <h1 class="main-title"
+            style="font-size: 22px; height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: #000000; text-align: center;">
+            What’s your current height?</h1>
+
+        {% with messages = get_flashed_messages(category_filter=['error']) %}
+        {% for message in messages %}<p role="alert">{{ message }}</p>{% endfor %}
+        {% endwith %}
 
         <!-- Unit Toggles (Cm / Inch) -->
         <div class="unit-toggle-container" style="margin-bottom: 25px;">
@@ -38,18 +48,24 @@
         </div>
 
         <!-- Form with Type-in Input Field -->
-        <form id="heightForm" action="{{ url_for('height') }}" method="POST" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            
-            <div class="height-output-card" style="background: #ffffff; width: 100%; max-width: 310px; padding: 20px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;">
-                <input type="number" name="height_value" id="heightInput" value="168" min="100" max="230" step="0.01" required style="font-size: 36px; font-weight: bold; color: #9ACd32; border: none; outline: none; background: transparent; text-align: center; width: 120px;">
-                <span id="unitLabel" style="font-size: 36px; font-weight: bold; color: #9ACd32; margin-left: 5px;">cm</span>
+        <form id="heightForm" action="{{ url_for('height') }}" method="POST"
+            style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+
+            <div class="height-output-card"
+                style="background: #ffffff; width: 100%; max-width: 310px; padding: 20px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;">
+                <input type="number" name="height_value" id="heightInput" value="168" min="100" max="230" step="0.01"
+                    required
+                    style="font-size: 36px; font-weight: bold; color: #9ACd32; border: none; outline: none; background: transparent; text-align: center; width: 120px;">
+                <span id="unitLabel"
+                    style="font-size: 36px; font-weight: bold; color: #9ACd32; margin-left: 5px;">cm</span>
             </div>
             <input type="hidden" name="height_unit" id="heightUnitInput" value="cm">
 
             <!-- Continue Button -->
-            <button type="submit" class="continue-btn" style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px; border: none; cursor: pointer; margin-top: 15px;">Continue</button>
+            <button type="submit" class="continue-btn"
+                style="background-color: #8F8E8E; color: #ffffff; padding: 14px 50px; font-size: 16px; border-radius: 25px; border: none; cursor: pointer; margin-top: 15px;">Continue</button>
         </form>
-        
+
         <!-- Bottom Navigation Bar -->
         <div class="bottom-nav">
             <a href="#"><img src="{{ url_for('static', filename='home.png') }}" alt="Home" class="nav-icon"></a>
@@ -71,9 +87,6 @@
             Inch: { min: 39.37, max: 90.55, label: 'in', formValue: 'in' }
         };
 
-        // Form controls can be restored by browser history.  Start from the
-        // restored hidden value so the highlight, label, and submitted unit
-        // always describe the same display value.
         let currentUnit = heightUnitInput.value === 'in' ? 'Inch' : 'Cm';
         let heightCm = Number(heightInput.value) * (currentUnit === 'Inch' ? 2.54 : 1);
 
@@ -105,7 +118,7 @@
             heightInput.value = roundedValue;
             heightUnitInput.value = limit.formValue;
         }
-        
+
         function setUnit(unit) {
             if (!limits[unit]) {
                 return;
@@ -137,4 +150,5 @@
     </script>
 
 </body>
+
 </html>

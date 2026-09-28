@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Logged Meal - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative; overflow-y: auto;">
+        <div class="status-bar"><span>9:41</span><div class="icons"><img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi"><img src="{{ url_for('static', filename='battery.png') }}" alt="Battery"></div></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;"><a href="{{ url_for('daily_menu', date=meal['meal_date'], meal=meal['meal_type']) }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a><h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000;">Edit Meal</h2><div style="width: 36px;"></div></div>
+        {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; background: #FFF3CD; color: #333; font-size: 13px;">{{ message }}</div>{% endfor %}{% endwith %}
+        <form method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 12px; padding-bottom: 70px;">
+            <label style="font-size: 13px; font-weight: 700;">Meal name</label><input type="text" name="food_name" value="{{ meal['food_name'] }}" required style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px;">
+            <label style="font-size: 13px; font-weight: 700;">Date</label><input type="date" name="meal_date" value="{{ meal['meal_date'] }}" required style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px;">
+            <label style="font-size: 13px; font-weight: 700;">Meal category</label><select name="meal_type" style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px; background: #fff;">{% for meal_type in meal_types %}<option value="{{ meal_type }}" {% if meal_type == meal['meal_type'] %}selected{% endif %}>{{ meal_type }}</option>{% endfor %}</select>
+            <label style="font-size: 13px; font-weight: 700;">Calories</label><input type="number" name="calories" min="0" step="0.1" value="{{ meal['calories'] }}" required style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px;">
+            <label style="font-size: 13px; font-weight: 700;">Protein (g)</label><input type="number" name="protein" min="0" step="0.1" value="{{ meal['protein_grams'] }}" required style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px;">
+            <label style="font-size: 13px; font-weight: 700;">Carbs (g)</label><input type="number" name="carbs" min="0" step="0.1" value="{{ meal['carbohydrate_grams'] }}" required style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px;">
+            <label style="font-size: 13px; font-weight: 700;">Fats (g)</label><input type="number" name="fats" min="0" step="0.1" value="{{ meal['fat_grams'] }}" required style="padding: 11px; border: 1.5px solid #CDE26D; border-radius: 14px;">
+            <button type="submit" style="width: 100%; background: #CDE26D; color: #000; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer;">Save Meal Changes</button>
+        </form>
+    </div>
+</body>
+</html>
