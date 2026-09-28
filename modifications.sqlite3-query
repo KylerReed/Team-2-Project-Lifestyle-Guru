@@ -1,0 +1,5 @@
+-- database: /Users/craigcurry/SDEV_265_Lifestyle_Guru/Team-2-Project-Lifestyle-Guru/lifestyle_guru.db
+
+-- Use the ▷ button in the top right corner to run the entire file.
+
+SELECT * FROM food_items;
