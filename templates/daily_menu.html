@@ -78,32 +78,6 @@
                 {% endif %}
             </section>
 
-            <section style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                <h3 style="font-size: 15px; margin: 0; color: #000;">Recommended {{ selected_meal }}</h3>
-                <div style="font-size: 12px; color: #8F8E8E;">Recommendations are suggestions and are not logged meals.</div>
-                {% if recommendations %}
-                    {% for recommendation in recommendations %}
-                    <div style="background: #ffffff; border: 1.5px solid #CDE26D; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); box-sizing: border-box;">
-                        <div>
-                            <div style="font-size: 16px; font-weight: 700; color: #000;">{{ recommendation['name'] }}</div>
-                            <div style="font-size: 12px; color: #8F8E8E; margin-top: 2px;">Recommended · {{ recommendation['calories'] }} kcal · {{ recommendation['serving_g'] }}g serving</div>
-                        </div>
-                        <div style="display: flex; gap: 14px; font-size: 13px; flex-wrap: wrap;">
-                            <div><strong style="color: #000;">{{ recommendation['protein_g'] }}g</strong> <span style="color: #8F8E8E;">Protein</span></div>
-                            <div><strong style="color: #000;">{{ recommendation['fat_g'] }}g</strong> <span style="color: #8F8E8E;">Fats</span></div>
-                            <div><strong style="color: #000;">{{ recommendation['carbs_g'] }}g</strong> <span style="color: #8F8E8E;">Carbs</span></div>
-                        </div>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <form action="{{ url_for('save_recommendation', recommendation_id=recommendation['id']) }}" method="POST" style="margin: 0;"><input type="hidden" name="meal_date" value="{{ selected_date }}"><input type="hidden" name="meal_type" value="{{ selected_meal }}"><button type="submit" style="border: none; background: #CDE26D; border-radius: 12px; padding: 7px 9px; font-size: 12px; font-weight: 700; cursor: pointer;">Save</button></form>
-                            <form action="{{ url_for('favorite_recommendation', recommendation_id=recommendation['id']) }}" method="POST" style="margin: 0;"><input type="hidden" name="meal_date" value="{{ selected_date }}"><input type="hidden" name="meal_type" value="{{ selected_meal }}"><button type="submit" style="border: 1px solid #E0E0E0; background: #ffffff; border-radius: 12px; padding: 7px 9px; font-size: 12px; font-weight: 700; cursor: pointer;">Favorite</button></form>
-                            <form action="{{ url_for('log_recommendation', recommendation_id=recommendation['id']) }}" method="POST" style="margin: 0;"><input type="hidden" name="meal_date" value="{{ selected_date }}"><input type="hidden" name="meal_type" value="{{ selected_meal }}"><button type="submit" style="border: none; background: #8F8E8E; color: #ffffff; border-radius: 12px; padding: 7px 9px; font-size: 12px; font-weight: 700; cursor: pointer;">Log Meal</button></form>
-                        </div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div style="background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; padding: 14px 16px; color: #666; font-size: 13px;">{{ recommendation_message }}</div>
-                {% endif %}
-            </section>
         </div>
 
         <div class="bottom-nav">
