@@ -20,12 +20,14 @@
         </div>
 
         <!-- Header: Back Arrow, Title, Notification Bell -->
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px;">
             <a href="{{ url_for('goal') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
-            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Goals and progress</h2>
-            <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
-                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
-            </div>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0; color: #000000;">Goals and progress</h2>
+            <a href="{{ url_for('notifications') }}" style="text-decoration: none; display: flex;">
+                <div style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell" style="width: 18px; height: 18px; object-fit: contain;">
+                </div>
+            </a>
         </div>
 
         <!-- User Profile Row -->
@@ -104,7 +106,7 @@
 
         <!-- Add/Edit Goals Button -->
        <div style="display: flex; gap: 10px; width: 100%; max-width: 330px; margin: -3px auto; padding: 0 10px;">
-    <a href="{{ url_for('set_goals') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Add/Edit Goals</a>
+    <a href="{{ url_for('set_goals') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Edit Goal</a>
     
     <a href="{{ url_for('daily_menu', date=selected_date, meal='Breakfast') }}" style="flex: 1; background-color: #8F8E8E; color: #ffffff; font-size: 14px; font-weight: 600; padding: 14px 10px; border: none; border-radius: 25px; text-align: center; text-decoration: none; display: inline-block;">Your Daily Menu</a>
 </div>
