@@ -734,7 +734,10 @@ def dashboard():
         progress=progress,
         profile_name=profile_name or "Demo User",
     )
-
+@app.route("/notifications")
+def notifications():
+    """Render the user notifications page."""
+    return render_template("notifications.html")
 
 @app.route("/log_meal", methods=["GET", "POST"])
 def log_meal():
