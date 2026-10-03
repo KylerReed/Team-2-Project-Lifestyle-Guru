@@ -22,17 +22,19 @@
             </div>
         </div>
 
-        <!-- Header: Back Arrow, Title, Notification Bell -->
+        <!-- Header: Back Arrow, Title, Notification Bell (Fixed Flex Layout) -->
         <div
-            style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;">
+            style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px;">
             <a href="{{ url_for('dashboard') }}"
                 style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a>
-            <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Profile</h2>
-            <div
-                style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
-                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell"
-                    style="width: 18px; height: 18px; object-fit: contain;">
-            </div>
+            <h2 style="font-size: 18px; font-weight: 700; margin: 0; color: #000000;">Profile</h2>
+            <a href="{{ url_for('notifications') }}" style="text-decoration: none; display: flex;">
+                <div
+                    style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell"
+                        style="width: 18px; height: 18px; object-fit: contain;">
+                </div>
+            </a>
         </div>
 
         <form action="{{ url_for('profile') }}" method="POST"
@@ -100,17 +102,23 @@
                 </div>
             </div>
 
-            <!-- Grid Parameters: Weight & Height -->
+          <!-- Grid Parameters: Weight & Height -->
             <div style="display: flex; gap: 12px; width: 100%;">
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
                     <label style="font-size: 13px; font-weight: 700; color: #000;">Weight</label>
                     <div style="position: relative;">
                         <select name="weight"
                             style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
-                            {% for w in range(30, 201) %}
-                            <option value="{{ w }} kg" {% if w==user_weight_value %}selected{% endif %}>{{ w }} kg
-                            </option>
-                            {% endfor %}
+                            <optgroup label="Kilograms (kg)">
+                                {% for w in range(30, 201) %}
+                                <option value="{{ w }} kg" {% if user_weight_value|round|int == w %}selected{% endif %}>{{ w }} kg</option>
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Pounds (lbs)">
+                                {% for lb in range(66, 441) %}
+                                <option value="{{ lb }} lbs" {% if user_weight_value|round|int == lb %}selected{% endif %}>{{ lb }} lbs</option>
+                                {% endfor %}
+                            </optgroup>
                         </select>
                         <span
                             style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
@@ -121,19 +129,16 @@
                     <div style="position: relative;">
                         <select name="height"
                             style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
-                            {% if user_height_unit == 'in' %}
-                            <!-- Full range for inches (36 in to 96 in) -->
-                            {% for h in range(36, 97) %}
-                            <option value="{{ h }} in" {% if user_height_value==h %}selected{% endif %}>{{ h }} in
-                            </option>
-                            {% endfor %}
-                            {% else %}
-                            <!-- Full range for centimeters (100 cm to 231 cm) -->
-                            {% for h in range(100, 231) %}
-                            <option value="{{ h }} cm" {% if user_height_value==h %}selected{% endif %}>{{ h }} cm
-                            </option>
-                            {% endfor %}
-                            {% endif %}
+                            <optgroup label="Centimeters (cm)">
+                                {% for h in range(100, 231) %}
+                                <option value="{{ h }} cm" {% if user_height_value|round|int == h %}selected{% endif %}>{{ h }} cm</option>
+                                {% endfor %}
+                            </optgroup>
+                            <optgroup label="Inches (in)">
+                                {% for inch in range(36, 97) %}
+                                <option value="{{ inch }} in" {% if user_height_value|round|int == inch %}selected{% endif %}>{{ inch }} in</option>
+                                {% endfor %}
+                            </optgroup>
                         </select>
                         <span
                             style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; font-size: 12px; color: #333;">▼</span>
