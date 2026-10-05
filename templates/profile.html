@@ -111,12 +111,12 @@
                             style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
                             <optgroup label="Kilograms (kg)">
                                 {% for w in range(30, 201) %}
-                                <option value="{{ w }} kg" {% if user_weight_value|round|int == w %}selected{% endif %}>{{ w }} kg</option>
+                                <option value="{{ w }} kg" {% if user_weight_unit == 'kg' and user_weight_value|round|int == w %}selected{% endif %}>{{ w }} kg</option>
                                 {% endfor %}
                             </optgroup>
                             <optgroup label="Pounds (lbs)">
                                 {% for lb in range(66, 441) %}
-                                <option value="{{ lb }} lbs" {% if user_weight_value|round|int == lb %}selected{% endif %}>{{ lb }} lbs</option>
+                                <option value="{{ lb }} lbs" {% if user_weight_unit == 'lbs' and user_weight_value|round|int == lb %}selected{% endif %}>{{ lb }} lbs</option>
                                 {% endfor %}
                             </optgroup>
                         </select>
@@ -131,12 +131,12 @@
                             style="width: 100%; padding: 10px 14px; border: 1.5px solid #E0E0E0; border-radius: 14px; outline: none; font-size: 13px; background: #ffffff; appearance: none; box-sizing: border-box; cursor: pointer; color: #000; font-weight: 500;">
                             <optgroup label="Centimeters (cm)">
                                 {% for h in range(100, 231) %}
-                                <option value="{{ h }} cm" {% if user_height_value|round|int == h %}selected{% endif %}>{{ h }} cm</option>
+                                <option value="{{ h }} cm" {% if user_height_unit == 'cm' and user_height_value|round|int == h %}selected{% endif %}>{{ h }} cm</option>
                                 {% endfor %}
                             </optgroup>
                             <optgroup label="Inches (in)">
                                 {% for inch in range(36, 97) %}
-                                <option value="{{ inch }} in" {% if user_height_value|round|int == inch %}selected{% endif %}>{{ inch }} in</option>
+                                <option value="{{ inch }} in" {% if user_height_unit == 'in' and user_height_value|round|int == inch %}selected{% endif %}>{{ inch }} in</option>
                                 {% endfor %}
                             </optgroup>
                         </select>

@@ -866,10 +866,19 @@ def profile():
 
     if request.method == "POST":
         try:
+            
+            weight_val_str, weight_unit = parse_measurement(request.form.get("weight"), "Weight")
+            height_val_str, height_unit = parse_measurement(request.form.get("height"), "Height")
+            
+            
+            session["weight_unit"] = "lbs" if weight_unit in {"lb", "lbs", "pound", "pounds"} else "kg"
+            session["height_unit"] = "in" if height_unit in {"in", "inch", "inches"} else "cm"
+
             values = profile_form_values(request.form)
         except ValueError as error:
             flash(str(error), "error")
             return redirect(url_for("profile"))
+        
         save_profile(user_id, *values)
         return redirect(url_for("profile"))
 
@@ -891,6 +900,7 @@ def profile():
             user_gender="",
             user_age=None,
             user_weight_value=None,
+            user_weight_unit="kg",
             user_height_value=None,
             user_height_unit="cm",
             user_activity="",
@@ -900,18 +910,32 @@ def profile():
         )
 
     bmi, bmr = profile_stats(profile_row)
-    weight_kg, height_cm = normalized_profile_measurements(
-        profile_row["weight_pounds"], profile_row["height_inches"]
-    )
+
+    
+    weight_unit = session.get("weight_unit", "kg")
+    height_unit = session.get("height_unit", "cm")
+
+    
+    if weight_unit == "lbs":
+        display_weight = round(profile_row["weight_pounds"])
+    else:
+        display_weight = round(pounds_to_kg(profile_row["weight_pounds"]))
+
+    if height_unit == "in":
+        display_height = round(profile_row["height_inches"])
+    else:
+        display_height = round(inches_to_cm(profile_row["height_inches"]))
+
     return render_template(
         "profile.html",
         user_email=profile_row["email"],
         profile_name=profile_row["name"] or "",
         user_gender=profile_row["sex"],
         user_age=profile_row["age"],
-        user_weight_value=round(weight_kg),
-        user_height_value=round(height_cm),
-        user_height_unit="cm",
+        user_weight_value=display_weight,
+        user_weight_unit=weight_unit,
+        user_height_value=display_height,
+        user_height_unit=height_unit,
         user_activity=profile_row["activity_level"],
         user_goal=profile_row["goal"] or "",
         bmi=bmi,
