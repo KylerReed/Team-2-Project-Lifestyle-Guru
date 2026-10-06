@@ -7,6 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Weight - Lifestyle Guru</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Styling for the editable weight input field */
+        .weight-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .weight-number-input {
+            font-size: 38px;
+            font-weight: bold;
+            color: #333;
+            background: transparent;
+            border: none;
+            border-bottom: 2px dashed #8F8E8E;
+            text-align: center;
+            width: 130px;
+            outline: none;
+        }
+        .weight-unit-label {
+            font-size: 28px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,7 +41,7 @@
 
         <!-- Status Bar -->
         <div class="status-bar">
-            <span>9:41</span>
+            <span id="live-est-clock">9:41</span>
             <div class="icons">
                 <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
                 <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
@@ -47,8 +73,11 @@
             <button type="button" class="unit-btn" id="lbsBtn" onclick="setUnit('Lbs')">Lbs</button>
         </div>
 
-        <!-- Weight Output Display -->
-        <div class="weight-output" id="weightOutput">62 Kg</div>
+        <!-- Weight Output / Type-in Input Container -->
+        <div class="weight-input-container">
+            <input type="number" id="weightNumberInput" class="weight-number-input" value="62" min="1" max="500" oninput="handleTypedWeight(this.value)">
+            <span id="weightUnitLabel" class="weight-unit-label">Kg</span>
+        </div>
 
         <!-- Horizontal Ruler Scroll Container -->
         <div class="ruler-wrapper">
@@ -78,11 +107,32 @@
 
     </div>
 
-    <!-- JavaScript for Scrollable Ruler and Unit Switching -->
+    <!-- JavaScript for Live Clock, Ruler, and Typed Input Syncing -->
     <script>
+        // --- Live EST Clock Script ---
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+
+        // --- Ruler, Typing & Unit Script ---
         const rulerTrack = document.getElementById('rulerTrack');
         const rulerContainer = document.getElementById('rulerContainer');
-        const weightOutput = document.getElementById('weightOutput');
+        const weightNumberInput = document.getElementById('weightNumberInput');
+        const weightUnitLabel = document.getElementById('weightUnitLabel');
         const selectedWeightInput = document.getElementById('selectedWeightInput');
         const selectedWeightUnitInput = document.getElementById('selectedWeightUnitInput');
 
@@ -145,9 +195,29 @@
 
             document.getElementById('kgBtn').classList.toggle('active', currentUnit === 'Kg');
             document.getElementById('lbsBtn').classList.toggle('active', currentUnit === 'Lbs');
-            weightOutput.innerText = `${roundedValue} ${currentUnit}`;
+            
+            // Only update input value if the user is NOT actively typing inside it
+            if (document.activeElement !== weightNumberInput) {
+                weightNumberInput.value = roundedValue;
+            }
+
+            weightUnitLabel.innerText = currentUnit;
             selectedWeightInput.value = roundedValue;
             selectedWeightUnitInput.value = currentUnit;
+        }
+
+        // Handles direct keyboard typing into the input field
+        function handleTypedWeight(val) {
+            const num = parseFloat(val);
+            if (isNaN(num)) return;
+
+            weightKg = currentUnit === 'Kg' ? num : num / 2.20462;
+
+            selectedWeightInput.value = Math.round(num);
+            selectedWeightUnitInput.value = currentUnit;
+
+            // Automatically scroll ruler to match the typed number
+            scrollToValue(Math.round(displayValue()));
         }
 
         buildRuler();
@@ -191,6 +261,28 @@
             scrollToValue(Math.round(displayValue()));
         }
     </script>
+
+     <!-- JavaScript for Live EST Clock -->
+    <script>
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+    </script>
+
 
 </body>
 

@@ -1,3 +1,4 @@
+<!-- templates/profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +16,7 @@
 
         <!-- Status Bar -->
         <div class="status-bar">
-            <span>9:41</span>
+            <span id="live-est-clock">9:41</span>
             <div class="icons">
                 <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
                 <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
@@ -102,7 +103,7 @@
                 </div>
             </div>
 
-          <!-- Grid Parameters: Weight & Height -->
+            <!-- Grid Parameters: Weight & Height -->
             <div style="display: flex; gap: 12px; width: 100%;">
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
                     <label style="font-size: 13px; font-weight: 700; color: #000;">Weight</label>
@@ -202,10 +203,10 @@
                 Profile Changes</button>
         </form>
 
-        <!-- More Section Menu -->
-
+        
+       <!-- More Section Menu -->
         <div
-            style="display: flex; flex-direction: column; background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+            style="display: flex; flex-direction: column; width: 100%; background: #ffffff; border: 1.5px solid #E0E0E0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.02); margin-top: -5px; margin-bottom: 20px; box-sizing: border-box;">
             <a href="{{ url_for('food_library', filter='favorites') }}"
                 style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #000; font-size: 14px; font-weight: 500; border-bottom: 1px solid #F0F0F0;">
                 <span>My Favorites</span>
@@ -216,15 +217,6 @@
                 <span>Add another profile <small>(Coming later)</small></span>
                 <span style="color: #8F8E8E; font-weight: bold;">›</span>
             </div>
-            <form action="{{ url_for('delete_profile') }}" method="POST"
-                onsubmit="return confirm('Delete your saved profile? This only removes your profile details.');"
-                style="margin: 0;">
-                <button type="submit"
-                    style="width: 100%; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border: none; background: #ffffff; color: #000; font-size: 14px; font-weight: 500; border-bottom: 1px solid #F0F0F0; cursor: pointer; text-align: left;">
-                    <span>Delete profile</span>
-                    <span style="color: #8F8E8E; font-weight: bold;">›</span>
-                </button>
-            </form>
             <form action="{{ url_for('logout') }}" method="POST" style="margin: 0;">
                 <button type="submit"
                     style="width: 100%; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border: none; background: #ffffff; color: #FF3B30; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left;">
@@ -245,6 +237,27 @@
         </div>
 
     </div>
+
+    <!-- JavaScript for Live EST Clock -->
+    <script>
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+    </script>
 
 </body>
 

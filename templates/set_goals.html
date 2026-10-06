@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative;">
-        <div class="status-bar"><span>9:41</span><div class="icons"><img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi"><img src="{{ url_for('static', filename='battery.png') }}" alt="Battery"></div></div>
+        <div class="status-bar"><span id="live-est-clock">9:41</span><div class="icons"><img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi"><img src="{{ url_for('static', filename='battery.png') }}" alt="Battery"></div></div>
         
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px;">
@@ -82,5 +82,27 @@
         function resetGoals() { document.getElementById('calorieRange').value = 2000; document.getElementById('proteinRange').value = 25; document.getElementById('carbohydrateRange').value = 50; document.getElementById('fatRange').value = 25; updateGoalPreview(); }
         window.onload = updateGoalPreview;
     </script>
+
+     <!-- JavaScript for Live EST Clock -->
+    <script>
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+    </script>
+
 </body>
 </html>
