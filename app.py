@@ -26,7 +26,6 @@ from database import (
     ensure_profile_schema as ensure_profile_schema_in_database,
     get_database_connection as open_database_connection,
 )
-from meal_plans import get_recommendation, get_recommendations
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
@@ -482,48 +481,6 @@ def insert_meal_log(
         )
 
 
-def find_or_save_recommendation_food(connection, user_id, recommendation):
-    """Reuse one matching saved food or add the selected catalog recommendation."""
-    food_item = connection.execute(
-        """
-        SELECT id FROM food_items
-        WHERE user_id = ? AND name = ? AND meal_type = ? AND calories = ?
-          AND protein_grams = ? AND carbohydrate_grams = ? AND fat_grams = ?
-        ORDER BY id LIMIT 1
-        """,
-        (
-            user_id,
-            recommendation["name"],
-            recommendation["meal"],
-            recommendation["calories"],
-            recommendation["protein_g"],
-            recommendation["carbs_g"],
-            recommendation["fat_g"],
-        ),
-    ).fetchone()
-    if food_item is not None:
-        return food_item["id"], False
-
-    cursor = connection.execute(
-        """
-        INSERT INTO food_items
-            (user_id, name, meal_type, calories, protein_grams,
-             carbohydrate_grams, fat_grams)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            user_id,
-            recommendation["name"],
-            recommendation["meal"],
-            recommendation["calories"],
-            recommendation["protein_g"],
-            recommendation["carbs_g"],
-            recommendation["fat_g"],
-        ),
-    )
-    return cursor.lastrowid, True
-
-
 ensure_profile_schema()
 
 
@@ -734,7 +691,10 @@ def dashboard():
         progress=progress,
         profile_name=profile_name or "Demo User",
     )
-
+@app.route("/notifications")
+def notifications():
+    """Render the user notifications page."""
+    return render_template("notifications.html")
 
 @app.route("/log_meal", methods=["GET", "POST"])
 def log_meal():
@@ -906,10 +866,19 @@ def profile():
 
     if request.method == "POST":
         try:
+            
+            weight_val_str, weight_unit = parse_measurement(request.form.get("weight"), "Weight")
+            height_val_str, height_unit = parse_measurement(request.form.get("height"), "Height")
+            
+            
+            session["weight_unit"] = "lbs" if weight_unit in {"lb", "lbs", "pound", "pounds"} else "kg"
+            session["height_unit"] = "in" if height_unit in {"in", "inch", "inches"} else "cm"
+
             values = profile_form_values(request.form)
         except ValueError as error:
             flash(str(error), "error")
             return redirect(url_for("profile"))
+        
         save_profile(user_id, *values)
         return redirect(url_for("profile"))
 
@@ -931,6 +900,7 @@ def profile():
             user_gender="",
             user_age=None,
             user_weight_value=None,
+            user_weight_unit="kg",
             user_height_value=None,
             user_height_unit="cm",
             user_activity="",
@@ -940,18 +910,32 @@ def profile():
         )
 
     bmi, bmr = profile_stats(profile_row)
-    weight_kg, height_cm = normalized_profile_measurements(
-        profile_row["weight_pounds"], profile_row["height_inches"]
-    )
+
+    
+    weight_unit = session.get("weight_unit", "kg")
+    height_unit = session.get("height_unit", "cm")
+
+    
+    if weight_unit == "lbs":
+        display_weight = round(profile_row["weight_pounds"])
+    else:
+        display_weight = round(pounds_to_kg(profile_row["weight_pounds"]))
+
+    if height_unit == "in":
+        display_height = round(profile_row["height_inches"])
+    else:
+        display_height = round(inches_to_cm(profile_row["height_inches"]))
+
     return render_template(
         "profile.html",
         user_email=profile_row["email"],
         profile_name=profile_row["name"] or "",
         user_gender=profile_row["sex"],
         user_age=profile_row["age"],
-        user_weight_value=round(weight_kg),
-        user_height_value=round(height_cm),
-        user_height_unit="cm",
+        user_weight_value=display_weight,
+        user_weight_unit=weight_unit,
+        user_height_value=display_height,
+        user_height_unit=height_unit,
         user_activity=profile_row["activity_level"],
         user_goal=profile_row["goal"] or "",
         bmi=bmi,
@@ -1283,20 +1267,10 @@ def daily_menu():
         selected_meal = "Breakfast"
 
     logged_meals = []
-    recommendations = ()
-    recommendation_message = "Log in and save a profile to see recommendations."
     user_id = active_demo_user_id()
 
     if user_id is not None:
         with get_database_connection() as connection:
-            profile_row = connection.execute(
-                """
-                SELECT goal, activity_level
-                FROM profiles
-                WHERE user_id = ?
-                """,
-                (user_id,),
-            ).fetchone()
             logged_meals = connection.execute(
                 """
                 SELECT id, food_name, calories, protein_grams, fat_grams,
@@ -1308,130 +1282,13 @@ def daily_menu():
                 (user_id, selected_date, selected_meal),
             ).fetchall()
 
-        if profile_row is None:
-            recommendation_message = "Save a profile to see recommendations."
-        elif not profile_row["goal"]:
-            recommendation_message = "Choose a profile goal to see recommendations."
-        else:
-            try:
-                recommendations = get_recommendations(
-                    profile_row["goal"],
-                    profile_row["activity_level"],
-                    selected_meal,
-                )
-            except ValueError as error:
-                recommendation_message = f"Recommendation data is unavailable: {error}"
-            if not recommendations:
-                recommendation_message = (
-                    recommendation_message
-                    or "No recommendations match this profile yet."
-                )
-
     return render_template(
         "daily_menu.html",
         selected_date=selected_date,
         selected_meal=selected_meal,
         date_options=date_options,
         logged_meals=logged_meals,
-        recommendations=recommendations,
-        recommendation_message=recommendation_message,
     )
-
-
-def recommendation_action_context(recommendation_id):
-    """Resolve a catalog action to its active user, ISO date, and meal tab."""
-    recommendation = get_recommendation(recommendation_id)
-    selected_day, _ = get_compact_date_options(request.form.get("meal_date"))
-    selected_meal = request.form.get("meal_type", "Breakfast")
-    if selected_meal not in MEAL_TYPES:
-        selected_meal = "Breakfast"
-    user_id = active_demo_user_id()
-    return recommendation, user_id, selected_day.isoformat(), selected_meal
-
-
-@app.post("/recommendations/<recommendation_id>/save")
-def save_recommendation(recommendation_id):
-    recommendation, user_id, selected_date, selected_meal = (
-        recommendation_action_context(recommendation_id)
-    )
-    if user_id is None:
-        return redirect(url_for("login"))
-    if recommendation is None:
-        flash("That recommendation is unavailable.", "error")
-        return redirect(url_for("daily_menu", date=selected_date, meal=selected_meal))
-
-    with get_database_connection() as connection:
-        _, created = find_or_save_recommendation_food(
-            connection, user_id, recommendation
-        )
-    flash(
-        (
-            "Recommendation saved to Food Library."
-            if created
-            else "That recommendation is already saved in Food Library."
-        ),
-        "success",
-    )
-    return redirect(url_for("daily_menu", date=selected_date, meal=selected_meal))
-
-
-@app.post("/recommendations/<recommendation_id>/favorite")
-def favorite_recommendation(recommendation_id):
-    recommendation, user_id, selected_date, selected_meal = (
-        recommendation_action_context(recommendation_id)
-    )
-    if user_id is None:
-        return redirect(url_for("login"))
-    if recommendation is None:
-        flash("That recommendation is unavailable.", "error")
-        return redirect(url_for("daily_menu", date=selected_date, meal=selected_meal))
-
-    with get_database_connection() as connection:
-        food_id, _ = find_or_save_recommendation_food(
-            connection, user_id, recommendation
-        )
-        favorite = connection.execute(
-            "SELECT 1 FROM favorites WHERE user_id = ? AND food_item_id = ?",
-            (user_id, food_id),
-        ).fetchone()
-        if favorite is None:
-            connection.execute(
-                "INSERT INTO favorites (user_id, food_item_id) VALUES (?, ?)",
-                (user_id, food_id),
-            )
-    flash("Recommendation saved and added to Favorites.", "success")
-    return redirect(url_for("daily_menu", date=selected_date, meal=selected_meal))
-
-
-@app.post("/recommendations/<recommendation_id>/log")
-def log_recommendation(recommendation_id):
-    recommendation, user_id, selected_date, selected_meal = (
-        recommendation_action_context(recommendation_id)
-    )
-    if user_id is None:
-        return redirect(url_for("login"))
-    if recommendation is None or recommendation["meal"] != selected_meal:
-        flash("Choose a recommendation from the active meal category.", "error")
-        return redirect(url_for("daily_menu", date=selected_date, meal=selected_meal))
-
-    with get_database_connection() as connection:
-        food_id, _ = find_or_save_recommendation_food(
-            connection, user_id, recommendation
-        )
-        insert_meal_log(
-            connection,
-            user_id,
-            selected_date,
-            selected_meal,
-            recommendation["name"],
-            recommendation["calories"],
-            recommendation["protein_g"],
-            recommendation["carbs_g"],
-            recommendation["fat_g"],
-            food_id,
-        )
-    flash("Recommendation saved and logged as a meal.", "success")
-    return redirect(url_for("daily_menu", date=selected_date, meal=selected_meal))
 
 
 if __name__ == "__main__":

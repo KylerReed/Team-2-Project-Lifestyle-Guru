@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Lifestyle Guru</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative; background-color: #f8f9fa;">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span id="live-est-clock">9:41</span>
+            <div class="icons">
+                <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
+                <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
+            </div>
+        </div>
+
+        <!-- Header with Back Arrow and Title -->
+        <div style="display: flex; align-items: center; width: 100%; margin-top: 10px; margin-bottom: 15px;">
+            <a href="{{ url_for('profile') }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold; margin-right: 15px;">←</a>
+            <h2 style="font-size: 20px; font-weight: bold; color: #333; margin: 0;">Notifications</h2>
+        </div>
+
+        <!-- Notification List Container -->
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; padding-bottom: 70px;">
+            
+            <!-- Notification Item 1 -->
+            <div style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; gap: 12px; align-items: flex-start;">
+                <div style="background: #e1f5fe; padding: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    🔔
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 4px 0; font-size: 14px; color: #333;">Time to log lunch!</h4>
+                    <p style="margin: 0; font-size: 12px; color: #666;">Don't forget to record your meal to stay on track with your macros today.</p>
+                    <span style="font-size: 10px; color: #999; margin-top: 6px; display: block;">10 minutes ago</span>
+                </div>
+            </div>
+
+            <!-- Notification Item 2 -->
+            <div style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; gap: 12px; align-items: flex-start;">
+                <div style="background: #e8f5e9; padding: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    🎯
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 4px 0; font-size: 14px; color: #333;">Goal Milestone Reached!</h4>
+                    <p style="margin: 0; font-size: 12px; color: #666;">Great job keeping your protein intake consistent this week.</p>
+                    <span style="font-size: 10px; color: #999; margin-top: 6px; display: block;">Yesterday</span>
+                </div>
+            </div>
+
+            <!-- Notification Item 3 -->
+            <div style="background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; gap: 12px; align-items: flex-start;">
+                <div style="background: #fff3e0; padding: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    💧
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 4px 0; font-size: 14px; color: #333;">Hydration Reminder</h4>
+                    <p style="margin: 0; font-size: 12px; color: #666;">Take a quick water break to hit your daily wellness target.</p>
+                    <span style="font-size: 10px; color: #999; margin-top: 6px; display: block;">2 days ago</span>
+                </div>
+            </div>
+
+        </div>
+
+       <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="{{ url_for('dashboard') }}"><img src="{{ url_for('static', filename='home.png') }}" alt="Home"
+                    class="nav-icon"></a>
+            <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='user-3.png') }}" alt="Profile"
+                    class="nav-icon"></a>
+            <a href="{{ url_for('food_library') }}"><img src="{{ url_for('static', filename='hat-chef.png') }}"
+                    alt="Chef" class="nav-icon"></a>
+        </div>
+
+    </div>
+
+     <!-- JavaScript for Live EST Clock -->
+    <script>
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+    </script>
+
+
+</body>
+</html>

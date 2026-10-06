@@ -14,7 +14,7 @@
 
         <!-- Status Bar -->
         <div class="status-bar">
-            <span>9:41</span>
+            <span id="live-est-clock">9:41</span>
             <div class="icons">
                 <img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi">
                 <img src="{{ url_for('static', filename='battery.png') }}" alt="Battery">
@@ -28,11 +28,13 @@
         <div
             style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 30px; margin-bottom: 15px; position: relative;">
             <h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000000;">Food Library</h2>
-            <div
-                style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: absolute; right: 0;">
-                <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell"
-                    style="width: 18px; height: 18px; object-fit: contain;">
-            </div>
+             <a href="{{ url_for('notifications') }}" style="text-decoration: none; display: flex;">
+                <div
+                    style="background: #FFF3CD; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <img src="{{ url_for('static', filename='bell.png') }}" alt="Notification Bell"
+                        style="width: 18px; height: 18px; object-fit: contain;">
+                </div>
+            </a>
         </div>
 
         <!-- Search Bar -->
@@ -210,6 +212,28 @@
             filterAndSortFoods();
         }
     </script>
+
+     <!-- JavaScript for Live EST Clock -->
+    <script>
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+    </script>
+
 
 </body>
 

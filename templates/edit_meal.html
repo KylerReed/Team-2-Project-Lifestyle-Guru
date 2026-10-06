@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="phone-screen" style="justify-content: flex-start; padding: 25px 20px; position: relative; overflow-y: auto;">
-        <div class="status-bar"><span>9:41</span><div class="icons"><img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi"><img src="{{ url_for('static', filename='battery.png') }}" alt="Battery"></div></div>
+        <div class="status-bar"><span id="live-est-clock">9:41</span><div class="icons"><img src="{{ url_for('static', filename='wifi.png') }}" alt="Wi-Fi"><img src="{{ url_for('static', filename='battery.png') }}" alt="Battery"></div></div>
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 25px; margin-bottom: 20px; position: relative;"><a href="{{ url_for('daily_menu', date=meal['meal_date'], meal=meal['meal_type']) }}" style="font-size: 20px; color: #000; text-decoration: none; font-weight: bold;">←</a><h2 style="font-size: 18px; font-weight: 700; margin: 0 auto; color: #000;">Edit Meal</h2><div style="width: 36px;"></div></div>
         {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 12px; background: #FFF3CD; color: #333; font-size: 13px;">{{ message }}</div>{% endfor %}{% endwith %}
         <form method="POST" style="width: 100%; display: flex; flex-direction: column; gap: 12px; padding-bottom: 70px;">
@@ -22,5 +22,27 @@
             <button type="submit" style="width: 100%; background: #CDE26D; color: #000; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 700; cursor: pointer;">Save Meal Changes</button>
         </form>
     </div>
+
+     <!-- JavaScript for Live EST Clock -->
+    <script>
+        function updateESTClock() {
+            const clockElement = document.getElementById('live-est-clock');
+            if (!clockElement) return;
+
+            const now = new Date();
+            const options = {
+                timeZone: 'America/New_York',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            clockElement.textContent = new Intl.DateTimeFormat('en-US', options).format(now);
+        }
+
+        updateESTClock();
+        setInterval(updateESTClock, 1000);
+    </script>
+
 </body>
 </html>
