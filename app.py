@@ -1,3 +1,10 @@
+"""Main Flask application for the Lifestyle Guru calorie-tracking prototype.
+
+This module defines the application's routes, form processing, session handling,
+profile management, nutrition goals, food-library functions, meal logging,
+dashboard behavior, and date-based nutrition history.
+"""
+
 from datetime import date, timedelta
 import math
 import os
@@ -89,6 +96,7 @@ def onboarding_required():
 
 
 def parse_age(value):
+    """Validate and return the user's age input."""
     try:
         age = int(value)
     except (TypeError, ValueError):
@@ -99,6 +107,7 @@ def parse_age(value):
 
 
 def parse_sex(value):
+    """Validate and return the user's sex/gender input."""
     sex = (value or "").strip().lower()
     if sex in {"female", "male"}:
         return sex
@@ -110,6 +119,7 @@ def parse_sex(value):
 
 
 def parse_activity_level(value):
+    """Validate and return the selected activity level."""
     normalized = (value or "").strip().lower()
     try:
         return ACTIVITY_LEVELS[normalized]
@@ -118,6 +128,7 @@ def parse_activity_level(value):
 
 
 def parse_goal(value):
+    """Validate and return the selected fitness goal."""
     goal = (value or "").strip()
     if goal not in PROFILE_GOALS:
         raise ValueError("Choose a valid goal.")
@@ -125,6 +136,7 @@ def parse_goal(value):
 
 
 def parse_weight_pounds(value, unit):
+    """Validate and return the user's weight in pounds."""
     try:
         weight = float(value)
     except (TypeError, ValueError):
@@ -141,6 +153,7 @@ def parse_weight_pounds(value, unit):
 
 
 def parse_height_inches(value, unit):
+    """Validate and return the user's height in inches."""
     try:
         height = float(value)
     except (TypeError, ValueError):
@@ -248,13 +261,7 @@ def profile_form_values(form):
 
 
 def get_food_user_id(connection):
-    """Get the food owner without adding authentication work in this pass.
-
-    The current login screen does not set session['user_id'] yet.  During local
-    development, the existing database has one approved user row, so that user
-    can own food records.  Once authentication is integrated, it must set the
-    session value instead of relying on this temporary single-user fallback.
-    """
+    """Return the active user ID, with a single-user fallback for the prototype."""
     session_user_id = active_demo_user_id()
     if session_user_id is not None:
         return session_user_id
@@ -486,11 +493,13 @@ ensure_profile_schema()
 
 @app.route("/")
 def welcome():
+    """Display the Lifestyle Guru welcome page."""
     return render_template("welcome.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Handle user login and direct the user to onboarding or the dashboard."""
     if request.method == "POST":
         with get_database_connection() as connection:
             user_id = get_demo_user_id(connection)
@@ -509,6 +518,7 @@ def login():
 
 @app.route("/age", methods=["GET", "POST"])
 def age():
+    """Collect and validate the user's age during onboarding."""
     if not onboarding_required():
         return redirect(url_for("login"))
     if request.method == "POST":
@@ -524,6 +534,7 @@ def age():
 
 @app.route("/weight", methods=["GET", "POST"])
 def weight():
+    """Collect and validate the user's weight during onboarding."""
     if not onboarding_required():
         return redirect(url_for("login"))
     if request.method == "POST":
@@ -541,6 +552,7 @@ def weight():
 
 @app.route("/gender", methods=["GET", "POST"])
 def gender():
+    """Collect and validate the user's gender during onboarding."""
     if not onboarding_required():
         return redirect(url_for("login"))
     if request.method == "POST":
@@ -556,6 +568,7 @@ def gender():
 
 @app.route("/height", methods=["GET", "POST"])
 def height():
+    """Collect and validate the user's height during onboarding."""
     if not onboarding_required():
         return redirect(url_for("login"))
     if request.method == "POST":
@@ -573,6 +586,7 @@ def height():
 
 @app.route("/activity", methods=["GET", "POST"])
 def activity():
+    """Collect the user's activity level during onboarding."""
     if not onboarding_required():
         return redirect(url_for("login"))
     if request.method == "POST":
@@ -590,6 +604,7 @@ def activity():
 
 @app.route("/goal", methods=["GET", "POST"])
 def goal():
+    """Collect the user's fitness goal and complete the onboarding profile."""
     user_id = active_demo_user_id()
     if user_id is None:
         return redirect(url_for("login"))
@@ -636,6 +651,7 @@ def goal():
 
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
+    """Display nutrition totals, goals, progress, and date information on the dashboard."""
     selected_day, date_options = get_compact_date_options(request.args.get("date"))
     selected_date = selected_day.isoformat()
     goal_targets = {
@@ -698,6 +714,7 @@ def notifications():
 
 @app.route("/log_meal", methods=["GET", "POST"])
 def log_meal():
+    """Display the meal-logging options for the selected date."""
     selected_day, _ = get_compact_date_options(request.args.get("date"))
     selected_meal = request.args.get("meal", "Breakfast")
     if selected_meal not in MEAL_TYPES:
@@ -860,6 +877,7 @@ def delete_meal(meal_id):
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
+    """Display and update the active user's saved profile information."""
     user_id = active_demo_user_id()
     if user_id is None:
         return redirect(url_for("login"))
@@ -964,6 +982,7 @@ def logout():
 
 @app.route("/add_food", methods=["GET", "POST"])
 def add_food():
+    """Create and save a custom Food Library item."""
     if request.method == "POST":
         try:
             name, meal_type, calories, protein, carbohydrates, fats = (
@@ -1010,6 +1029,7 @@ def add_food():
 
 @app.route("/food_library", methods=["GET", "POST"])
 def food_library():
+    """Display saved foods with sorting, favorites, and common-food options."""
     selected_filter = request.args.get("filter", "az")
     if selected_filter not in {"az", "za", "favorites", "common"}:
         selected_filter = "az"
@@ -1061,6 +1081,7 @@ def food_library():
 
 @app.route("/foods/<int:food_id>/favorite", methods=["POST"])
 def toggle_favorite(food_id):
+    """Add or remove a saved Food Library item from the user's favorites."""
     with get_database_connection() as connection:
         user_id = get_food_user_id(connection)
         if user_id is None:
@@ -1095,6 +1116,7 @@ def toggle_favorite(food_id):
 
 @app.route("/foods/<int:food_id>/edit", methods=["GET", "POST"])
 def edit_food(food_id):
+    """Display and save changes to an existing Food Library item."""
     with get_database_connection() as connection:
         user_id = get_food_user_id(connection)
         if user_id is None:
@@ -1166,6 +1188,7 @@ def delete_food(food_id):
 
 @app.route("/set_goals", methods=["GET", "POST"])
 def set_goals():
+    """Display and update the user's calorie and macronutrient goals."""
     default_goal_values = {
         "calories": 2000,
         "protein_percent": 25,
@@ -1260,6 +1283,7 @@ def set_goals():
 
 @app.get("/daily_menu")
 def daily_menu():
+    """Display logged meals and nutrition totals for the selected date."""
     selected_day, date_options = get_compact_date_options(request.args.get("date"))
     selected_date = selected_day.isoformat()
     selected_meal = request.args.get("meal", "Breakfast")
